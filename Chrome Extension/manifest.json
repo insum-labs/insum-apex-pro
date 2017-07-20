@@ -1,0 +1,20 @@
+{
+   "background": {
+      "scripts": [ "thirdParty/jquery-3.1.1.min.js", "background.js" ]
+   },
+   "browser_action": {
+      "default_icon": "highlighter.png"
+   },
+   "content_scripts": [ {
+      "js": [ "thirdParty/jquery-3.1.1.min.js", "content.js" ],
+      "matches": [ "http://*/*/f?p=4000:4500*", "https://*/*/f?p=4000:4500*", "https://*/*/*/wwv_flow.accept", "http://*/*/*/wwv_flow.accept", "https://*/*/wwv_flow.accept", "http://*/*/wwv_flow.accept" ],
+      "run_at": "document_end"
+   } ],
+   "description": "This tool allows you to filter out default properties, and highlight non-defaults.",
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnBmR7Iyiuva+W7Kyk236m3MklnvwJDu3vKE7PLSIWOin90hY5F/q3oC7RcdeIR2ZOUSgwa6qkNlhrRjF1pnltvMRX6S+2fQX9USB9ZtzMQ9PYY9N0jKM2a75Txum7ysum9St+NJfl0jZZZ5WLyUfV619pnb3IZb0vbhzxQ5w4pSMwucruWYH7q45WXgp48ZPFqyKuu3R6D60LISBWZg61r+iCkeU0U8gGLNX1RM7s6/0Yhdq3YjV/Sl2LHzGR8VxsdV3cqoKcQZHimeAS9Zwu22Z0jfkez3ocO1/9dwBf1siYf820ZX+X35bJxKnPw+h1s2P/krzinOlCQukYgJ7CQIDAQAB",
+   "manifest_version": 2,
+   "name": "Apex Property Highlighter",
+   "permissions": [ "webNavigation", "storage" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.1.0"
+}
