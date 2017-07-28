@@ -6,7 +6,7 @@
     ]
   },
   "browser_action": {
-    "default_icon": "highlighter.png"
+    "default_icon": "insum_logo_invisible_background_16x16.png"
   },
   "content_scripts": [
     {
@@ -33,6 +33,7 @@
     "webNavigation",
     "storage"
   ],
+  "icons": {"128": "in_ronsard_crystal_bold_slightly_squeezed_white_background.png"},
   "update_url": "https://clients2.google.com/service/update2/crx",
-  "version": "1.2.0"
+  "version": "1.2.3"
 }
