@@ -1,8 +1,6 @@
 # Insum Apex Pro
 > Designed by Apex developers, for Apex developers.
 
-> Develop Apex Applications Like a Pro!
-
 ### Features
 Property Highlighter
 * A `Show Non-Defaults Only` button hides properties that have not been changed from their default values when enabled.
@@ -17,6 +15,9 @@ Persisent Filter and Persistent Attribute Focus (not yet implemented)
 Page Builder LOV Viewer (not yet implemented)
 * Preview a LOV before you select it in page builder
 <YouTube Video Pending>
+
+
+> Develop Apex Applications Like a Pro!
 
 ### Chrome Installation
 
