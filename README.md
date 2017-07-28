@@ -17,8 +17,6 @@ Page Builder LOV Viewer (not yet implemented)
 <YouTube Video Pending>
 
 
-> Develop Apex Applications Like a Pro!
-
 ### Chrome Installation
 
 ### Installation
