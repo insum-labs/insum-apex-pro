@@ -2,8 +2,8 @@
 
 > Designed by Apex developers, for Apex developers.
 
-### Usage - Apex Property Highlighter
-While using Apex Property Highlighter, you will see 2 new buttons in the `Page Builder` tab.
+### Features
+Property Highlighter
 * `Show Non-Defaults Only` will hide properties that have not been changed from their default values when enabled.
 * `Toggle Non-Defaults` will highlight non-defualt values with a yellow background when toggled.
 
