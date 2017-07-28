@@ -4,8 +4,8 @@
 
 ### Features
 Property Highlighter
-* `Show Non-Defaults Only` will hide properties that have not been changed from their default values when enabled.
-* `Toggle Non-Defaults` will highlight non-defualt values with a yellow background when toggled.
+* A `Show Non-Defaults Only` button hides properties that have not been changed from their default values when enabled.
+* A `Toggle Non-Defaults` button will highlight non-defualt values with a yellow background when toggled.
 
 ### Chrome Installation
 
