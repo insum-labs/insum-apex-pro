@@ -638,6 +638,28 @@ addInsumLogo();
 
 
 })(window.SAP = window.SAP || {});
+
+	// Persistent cursor position
+	function focusLastSelectedProperty(){
+		// console.log('inside focusLastSelectedProperty');
+		// get curretly selected property id
+		var currentSelected = $(document.activeElement).data('property-id');
+		// update currentSelected
+		$(document).on('click', function(){
+			let currentSelectedCheck = $(document.activeElement).data('property-id');
+			if(currentSelectedCheck){
+				currentSelected = currentSelectedCheck;
+			}
+			// console.log(currentSelected);
+		});
+		// register focus on selectionChanged event
+		$(document).on('selectionChanged', function(e, name, components){
+			$(`[data-property-id=${currentSelected}]`).focus();
+		})
+	}
+
+	focusLastSelectedProperty();
+
 }
 
 append(appendToPage);
