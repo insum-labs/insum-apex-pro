@@ -660,6 +660,35 @@ addInsumLogo();
 
 	focusLastSelectedProperty();
 
+	// Persistent filter properties
+	function persistentFocusProperties(textToFilter){
+		// console.log("inside persistentFocusProperties");
+
+		$(document).on('selectionChanged', function(e, name, component){
+			// set current value in filter
+			// TODO remove dependency on currentFilter
+			var currentFilter = $("#pe > div.a-PropertyEditor-filter > input").val();
+			$("#pe > div.a-PropertyEditor-filter > input").on('keyup', function(){
+					currentFilter = $(this).val();
+					textToFilter = currentFilter;
+					console.log(currentFilter);
+				});
+
+		});
+
+		$(document).on('selectionChanged', function(e, name, component){
+			if(textToFilter != undefined || textToFilter != ""){
+				$("#pe > div.a-PropertyEditor-filter > input").val(textToFilter);
+				$("#pe > div.a-PropertyEditor-filter > input").trigger('keyup', {keyCode: 13});
+			}
+		});
+	}
+
+	persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+
 }
+
+
+
 
 append(appendToPage);
