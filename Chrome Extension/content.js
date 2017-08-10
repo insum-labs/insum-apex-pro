@@ -39,6 +39,7 @@ addInsumLogo();
 		SAP.currentComponentId = -1
 		SAP.hideDefaultItems = false;
 		SAP.highlightNonDefaults = true;
+		SAP.isResettingFromGotoPageFeature = false;
 		createFilterButton();
 		createHighlightButton();
 		createMutationObserver();
@@ -89,6 +90,8 @@ addInsumLogo();
 
 		$('body').on('change','#go_to_page',
 			function() {
+				SAP.currentComponentTypeId = pe.COMP_TYPE['PAGE'];
+				SAP.isResettingFromGotoPageFeature = true;
 				initOrResetAllData();
 			}
 		);
@@ -338,10 +341,13 @@ addInsumLogo();
 			var interval = setInterval(function() {
 					var cache = [];
 					let allData = pe.getAll();
-					//console.log(allData);
 					if (allData && allData.componentTypes && allData.componentTypes[pe.COMP_TYPE['APPLICATION']]) {
 							clearInterval(interval);
 							SAP.allData = allData.componentTypes;
+							if(SAP.isResettingFromGotoPageFeature) {
+								SAP.isResettingFromGotoPageFeature = false;
+								updatePropertyNodes();
+							}
 					} else {
 							return;
 					}
