@@ -44,13 +44,16 @@ function addInsumLogo() {
 * @param {string} label Label for toggle button
 * @param {string} on_label Lable for toggle button True value
 * @param {string} off_label Lable for toggle button False value
-* @param {(string|Number|Boolean)} on_value internal value when toggle is on
+* @param {(string|number|boolean)} on_value internal value when toggle is on
 * @param {(string|Number|Boolean)} off_value internal value when toggle is off
 * @param {(string|Number|Boolean)} on_value internal value when toggle is on
+* @param {Number} default_value default value (0 or 1; 0: off, 1: on) of the toggle when user first uses the extension
 * @param {toggleChangeCallback} callback callback function handles the onchange response for change of value.
 */
-function addOptionToINMenu(label, on_label, off_label, on_value, off_value, callback){
-	let $fieldset = $("#INSUM_button_menu_ul").append(`<li><div style="padding: 10px"><label>${label}</label><fieldset data-INSUMapexProID=${window.INSUMCOUNTER} class="apex-button-group apex-item-yes-no"><legend class="u-VisuallyHidden">switch_label</legend><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value=${on_value} required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" class="a-Button">${on_label}</label><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_N" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value="${off_value}" checked="checked" required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_N" class="a-Button">${off_label}</label><input type="hidden" name="INSUM_SWITCH" value="TODO" id="INSUM_SWITCH_${window.INSUMCOUNTER}" autocomplete="off"></fieldset></div></li>`);
+function addOptionToINMenu(label, on_label, off_label, on_value, off_value, default_value, callback){
+	let $fieldset = $("#INSUM_button_menu_ul").append(`<li><div style="padding: 10px"><label>${label}</label><fieldset id="INSUM_SWITCH_${window.INSUMCOUNTER}_fieldset" data-INSUMapexProID=${window.INSUMCOUNTER} class="apex-button-group apex-item-yes-no"><legend class="u-VisuallyHidden">switch_label</legend><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value=${on_value} required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" class="a-Button">${on_label}</label><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_N" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value="${off_value}" required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_N" class="a-Button">${off_label}</label><input type="hidden" name="INSUM_SWITCH" value="${default_value}" id="INSUM_SWITCH_${window.INSUMCOUNTER}" autocomplete="off"></fieldset></div></li>`);
+
+	default_value == 1 ? $(`#INSUM_SWITCH_${window.INSUMCOUNTER}_Y`).prop("checked", true) : $(`#INSUM_SWITCH_${window.INSUMCOUNTER}_N`).prop("checked", true);
 
 	$(`#INSUM_SWITCH_${window.INSUMCOUNTER}`).on('change', function(){
 		callback(this, this.value);
@@ -738,24 +741,41 @@ addInsumLogo();
 	* @function focusLastSelectedProperty
 	*/
 	function focusLastSelectedProperty(){
-		// console.log('inside focusLastSelectedProperty');
-		// get curretly selected property id
-		var currentSelected = $(document.activeElement).data('property-id');
-		// update currentSelected
-		$(document).on('click', function(){
-			let currentSelectedCheck = $(document.activeElement).data('property-id');
-			if(currentSelectedCheck){
-				currentSelected = currentSelectedCheck;
-			}
-			// console.log(currentSelected);
-		});
-		// register focus on selectionChanged event
-		$(document).on('selectionChanged', function(e, name, components){
-			$(`[data-property-id=${currentSelected}]`).focus();
-		})
+		// Using GetCookie and SetCookie from builtin Apex functions
+		if(window.GetCookie("LastSeclectedPropCookie") == 1){
+			// console.log('inside focusLastSelectedProperty');
+			// get curretly selected property id
+			var currentSelected = $(document.activeElement).data('property-id');
+			// update currentSelected
+			$(document).on('click.updateCurrentSelection', function(){
+				let currentSelectedCheck = $(document.activeElement).data('property-id');
+				if(currentSelectedCheck){
+					currentSelected = currentSelectedCheck;
+				}
+				// console.log(currentSelected);
+			});
+			// register focus on selectionChanged event
+			$(document).on('selectionChanged.focusOnPropAfterSelection', function(e, name, components){
+				$(`[data-property-id=${currentSelected}]`).focus();
+			})
+		}
+		if(window.GetCookie("LastSeclectedPropCookie") === null){
+			window.SetCookie("LastSeclectedPropCookie", 1);
+			focusLastSelectedProperty();
+		}
+		if(window.GetCookie("LastSeclectedPropCookie") == 0){
+			$(document).off("click.updateCurrentSelection");
+			$(document).off("selectionChanged.focusOnPropAfterSelection");
+		}
 	}
 
 	focusLastSelectedProperty();
+
+	// Add focusLastSelectedProperty selection to IN menu
+	addOptionToINMenu(label="Focus Last Propery Selected", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("LastSeclectedPropCookie"), callback=function(object, object_value, id){
+		window.SetCookie("LastSeclectedPropCookie", object_value);
+		focusLastSelectedProperty();
+	});
 
 	/**
 	* Make filter properties peristent over different components.
@@ -765,29 +785,43 @@ addInsumLogo();
 	*/
 	function persistentFocusProperties(textToFilter){
 		// console.log("inside persistentFocusProperties");
+		if(window.GetCookie("PersistentFocusCookie") == 1){
+			$(document).on('selectionChanged.PersistentFocus_1', function(e, name, component){
+				// set current value in filter
+				// TODO remove dependency on currentFilter
+				var currentFilter = $("#pe > div.a-PropertyEditor-filter > input").val();
+				$("#pe > div.a-PropertyEditor-filter > input").on('keyup', function(){
+						currentFilter = $(this).val();
+						textToFilter = currentFilter;
+						console.log(currentFilter);
+					});
 
-		$(document).on('selectionChanged', function(e, name, component){
-			// set current value in filter
-			// TODO remove dependency on currentFilter
-			var currentFilter = $("#pe > div.a-PropertyEditor-filter > input").val();
-			$("#pe > div.a-PropertyEditor-filter > input").on('keyup', function(){
-					currentFilter = $(this).val();
-					textToFilter = currentFilter;
-					console.log(currentFilter);
-				});
+			});
 
-		});
-
-		$(document).on('selectionChanged', function(e, name, component){
-			if(textToFilter != undefined || textToFilter != ""){
-				$("#pe > div.a-PropertyEditor-filter > input").val(textToFilter);
-				$("#pe > div.a-PropertyEditor-filter > input").trigger('keyup', {keyCode: 13});
-			}
-		});
+			$(document).on('selectionChanged.PersistentFocus_2', function(e, name, component){
+				if(textToFilter != undefined || textToFilter != ""){
+					$("#pe > div.a-PropertyEditor-filter > input").val(textToFilter);
+					$("#pe > div.a-PropertyEditor-filter > input").trigger('keyup', {keyCode: 13});
+				}
+			});
+		}
+		if(window.GetCookie("PersistentFocusCookie") === null){
+			window.SetCookie("PersistentFocusCookie", 1);
+			persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+		}
+		if(window.GetCookie("PersistentFocusCookie") == 0){
+			$(document).off("selectionChanged.PersistentFocus_1");
+			$(document).off("selectionChanged.PersistentFocus_2");
+		}
 	}
 
 	persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 
+	// Add persistentFocusProperties selection to IN menu
+	addOptionToINMenu(label="Consistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("PersistentFocusCookie"), callback=function(object, object_value, id){
+		window.SetCookie("PersistentFocusCookie", object_value);
+		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+	});
 
 }
 
