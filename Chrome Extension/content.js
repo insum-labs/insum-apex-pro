@@ -818,7 +818,7 @@ addInsumLogo();
 	persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 
 	// Add persistentFocusProperties selection to IN menu
-	addOptionToINMenu(label="Consistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("PersistentFocusCookie"), callback=function(object, object_value, id){
+	addOptionToINMenu(label="Persistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("PersistentFocusCookie"), callback=function(object, object_value, id){
 		window.SetCookie("PersistentFocusCookie", object_value);
 		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 	});
