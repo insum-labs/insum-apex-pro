@@ -785,28 +785,43 @@ addInsumLogo();
 	*/
 	function persistentFocusProperties(textToFilter){
 		// console.log("inside persistentFocusProperties");
+		if(window.GetCookie("PersistentFocusCookie") == 1){
+			$(document).on('selectionChanged.PersistentFocus_1', function(e, name, component){
+				// set current value in filter
+				// TODO remove dependency on currentFilter
+				var currentFilter = $("#pe > div.a-PropertyEditor-filter > input").val();
+				$("#pe > div.a-PropertyEditor-filter > input").on('keyup', function(){
+						currentFilter = $(this).val();
+						textToFilter = currentFilter;
+						console.log(currentFilter);
+					});
 
-		$(document).on('selectionChanged', function(e, name, component){
-			// set current value in filter
-			// TODO remove dependency on currentFilter
-			var currentFilter = $("#pe > div.a-PropertyEditor-filter > input").val();
-			$("#pe > div.a-PropertyEditor-filter > input").on('keyup', function(){
-					currentFilter = $(this).val();
-					textToFilter = currentFilter;
-					console.log(currentFilter);
-				});
+			});
 
-		});
-
-		$(document).on('selectionChanged', function(e, name, component){
-			if(textToFilter != undefined || textToFilter != ""){
-				$("#pe > div.a-PropertyEditor-filter > input").val(textToFilter);
-				$("#pe > div.a-PropertyEditor-filter > input").trigger('keyup', {keyCode: 13});
-			}
-		});
+			$(document).on('selectionChanged.PersistentFocus_2', function(e, name, component){
+				if(textToFilter != undefined || textToFilter != ""){
+					$("#pe > div.a-PropertyEditor-filter > input").val(textToFilter);
+					$("#pe > div.a-PropertyEditor-filter > input").trigger('keyup', {keyCode: 13});
+				}
+			});
+		}
+		if(window.GetCookie("PersistentFocusCookie") === null){
+			window.SetCookie("PersistentFocusCookie", 1);
+			persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+		}
+		if(window.GetCookie("PersistentFocusCookie") == 0){
+			$(document).off("selectionChanged.PersistentFocus_1");
+			$(document).off("selectionChanged.PersistentFocus_2");
+		}
 	}
 
 	persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+
+	// Add persistentFocusProperties selection to IN menu
+	addOptionToINMenu(label="Consistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("PersistentFocusCookie"), callback=function(object, object_value, id){
+		window.SetCookie("PersistentFocusCookie", object_value);
+		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+	});
 
 }
 
