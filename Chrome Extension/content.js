@@ -1,5 +1,11 @@
 console.log('Running Apex Property Highlighter');
 
+/**
+* @function append
+* @param {} func
+* @param {} params
+*/
+
 function append(func, params) {
 		var script = $('<script>(' + func.toString() + ')(' + (typeof params == "object" ? JSON.stringify(params) : params) + ')</script>');
 		$('body').append(script);
@@ -7,23 +13,53 @@ function append(func, params) {
 
 let appendToPage = function() {
 
+/**
+* Add the inSum logo
+* @function addInsumLogo
+*/
 
-//Add the inSum logo
 function addInsumLogo() {
 
-	let $insumButton = $('.a-Header-col.a-Header-col--right').append('<button id="in-logo" class="a-Button a-Button--noLabel a-Button--iconTextButton a-Button--noUI a-Button--navLink js-menuButton a-Button--accountMenu"><image style="height:20px;"src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAYAAAAKsfL4AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4QccEzoIjDEd0gAAA31JREFUeNrt2k9Ik3Ecx/HvM5zS3HRbGraJMkk2u8hKghFeDOZFOgRSgvTnogieFLKDHQIPJiRdTShP7WYQIbiDQQOhKMkSbcscyHwwN9l0+swp7telDbPI+Tz792yf983B8/js99pvz/P8nnErYR971PuQxDQx8ZwjJCkFhgAAAEAAAAACAAAQAACAAAAABAAAoMzEMcYwCpgBAEAAAAACAABQhisqxDfNC34Wje3T3uE+8RF/4nV9cRlpizWJv01qY9p/dFAUPhAoEA2KuhlI5gDTvf//tRkNDX8Oega8u2v0IbBA5pjztLtgRERuhZ1u1rZSndpIZcrSx2dLtA9SdiO2Evaxya+3RG3cb3OdOEDenbW07v8otE/4yfiIn+ZDHmLBsbR+csvP9dFlXQNZ9RauYL+C4oP+JeQhHz+U0f+9tTFKMxtEHsMga668RAZVJVcwAG/W3rH3gQXSCo6sH4uPHyIHT+RW2Nm9uutkq2zk8hKAF/zM5Z9LfNK1OXZ85piTZpedNMV3sJ769qRnRFGuf8UshL6zFyuvxZxAs5JWcJBj3kFdTdOkUarkfR/w7GMrm13ulc3g/3EBMfeE8YKfyRpAzpljTnLM36CTEACQ5k5CAECGEDajoWEAZLGn314OhA8EAORaAMjg5ekU72IAyPJdc14sRaQqTtf912vpXsQrOIBqwyBVlOioTm0komSWuDsTS+jrkQCtCuspXejz7qyxo8eQVwBuhZ2uVV2hGlUVVZ2pEP08QaNUkUap4kxqI9mokcKGZhr/MclSMTte+d5Sn6Uzv2YAp+umO6a2lD4oOQ7SZ+nklrausqnF25L2xYJjtBltG44fq2wB4g9ELmhquGQWvVJRQ7mJq26appHFCSZlKXx1d31A1gBdTdMZG/R/zYb7F+9yI4skGuFTcImseou8LkPdCju1mMep3+bK2uAfR3Ar7KK239oYlc85wK2wU099O/VLfPaaDoSe+naacYtbKo8v0OU0QIt5POcG/mhWvYWb+f3LidO2tO3N/RlgzeHBl1rkcA93wtnME16V10k4X8MMyFLB6DZmQCoKqTpEbacVHKQVHACQWq36vKTtASAxU6kRAHIOAAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAJLQL4pcMzh4pdIjAAAAAElFTkSuQmCC"><image></button>')
-/*
-	<div id="FOEXMenu_menu" class="a-Menu" style="position: absolute; top: 39px; left: 1625px; display: none;" tabindex="-1" role="menu"><div class="a-Menu-content"><ul><li id="FOEXMenu_menu_0" class="a-Menu-item"><div class="a-Menu-inner"><span class="a-Menu-labelContainer"><span class="a-Menu-statusCol"><span class="a-Icon icon-check fda-green"></span></span><button type="button" id="FOEXMenu_menu_0i" role="menuitem" class="a-Menu-label">APEX Builder Enhancements: active</button></span><span class="a-Menu-accelContainer"><span class="a-Menu-subMenuCol"></span></span></div></li><li id="FOEXMenu_menu_1" class="a-Menu-item"><div class="a-Menu-inner"><span class="a-Menu-labelContainer"><span class="a-Menu-statusCol"><span class="a-Icon icon-error fda-red"></span></span><button type="button" id="FOEXMenu_menu_1i" role="menuitem" class="a-Menu-label">FOEX Plugin Enhancements: inactive</button></span><span class="a-Menu-accelContainer"><span class="a-Menu-subMenuCol"></span></span></div></li><li id="FOEXMenu_menu_2" class="a-Menu-item"><div class="a-Menu-inner"><span class="a-Menu-labelContainer"><span class="a-Menu-statusCol"><span class="a-Icon icon-check"></span></span><a href="javascript:FoexDA.settings.activateAppForFoex();" id="FOEXMenu_menu_2i" role="menuitem" class="a-Menu-label">Enable FOEX Plugin Enhancements</a></span><span class="a-Menu-accelContainer"><span class="a-Menu-subMenuCol"></span></span></div></li><li id="FOEXMenu_menu_3" class="a-Menu-item"><div class="a-Menu-inner"><span class="a-Menu-labelContainer"><span class="a-Menu-statusCol"><span class="a-Icon icon-info"></span></span><a href="javascript:FoexDA.aboutFda();" id="FOEXMenu_menu_3i" role="menuitem" class="a-Menu-label">About the FDA</a></span><span class="a-Menu-accelContainer"><span class="a-Menu-subMenuCol"></span></span></div></li></ul></div></div>
-*/
-	$insumButton.bind('click', function(e) {
-		e.preventDefault();
-	})
+	let $insumButton = $('.a-Header-col.a-Header-col--right').append('<button type="button" id="in-logo" class="a-Button a-Button--noLabel a-Button--iconTextButton a-Button--noUI a-Button--navLink js-menuButton a-Button--accountMenu"><image style="height:20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAYAAAAKsfL4AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4QccEzoIjDEd0gAAA31JREFUeNrt2k9Ik3Ecx/HvM5zS3HRbGraJMkk2u8hKghFeDOZFOgRSgvTnogieFLKDHQIPJiRdTShP7WYQIbiDQQOhKMkSbcscyHwwN9l0+swp7telDbPI+Tz792yf983B8/js99pvz/P8nnErYR971PuQxDQx8ZwjJCkFhgAAAEAAAAACAAAQAACAAAAABAAAoMzEMcYwCpgBAEAAAAACAABQhisqxDfNC34Wje3T3uE+8RF/4nV9cRlpizWJv01qY9p/dFAUPhAoEA2KuhlI5gDTvf//tRkNDX8Oega8u2v0IbBA5pjztLtgRERuhZ1u1rZSndpIZcrSx2dLtA9SdiO2Evaxya+3RG3cb3OdOEDenbW07v8otE/4yfiIn+ZDHmLBsbR+csvP9dFlXQNZ9RauYL+C4oP+JeQhHz+U0f+9tTFKMxtEHsMga668RAZVJVcwAG/W3rH3gQXSCo6sH4uPHyIHT+RW2Nm9uutkq2zk8hKAF/zM5Z9LfNK1OXZ85piTZpedNMV3sJ769qRnRFGuf8UshL6zFyuvxZxAs5JWcJBj3kFdTdOkUarkfR/w7GMrm13ulc3g/3EBMfeE8YKfyRpAzpljTnLM36CTEACQ5k5CAECGEDajoWEAZLGn314OhA8EAORaAMjg5ekU72IAyPJdc14sRaQqTtf912vpXsQrOIBqwyBVlOioTm0komSWuDsTS+jrkQCtCuspXejz7qyxo8eQVwBuhZ2uVV2hGlUVVZ2pEP08QaNUkUap4kxqI9mokcKGZhr/MclSMTte+d5Sn6Uzv2YAp+umO6a2lD4oOQ7SZ+nklrausqnF25L2xYJjtBltG44fq2wB4g9ELmhquGQWvVJRQ7mJq26appHFCSZlKXx1d31A1gBdTdMZG/R/zYb7F+9yI4skGuFTcImseou8LkPdCju1mMep3+bK2uAfR3Ar7KK239oYlc85wK2wU099O/VLfPaaDoSe+naacYtbKo8v0OU0QIt5POcG/mhWvYWb+f3LidO2tO3N/RlgzeHBl1rkcA93wtnME16V10k4X8MMyFLB6DZmQCoKqTpEbacVHKQVHACQWq36vKTtASAxU6kRAHIOAAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAJLQL4pcMzh4pdIjAAAAAElFTkSuQmCC"><image></button>')
 
+	$('body').append('<div id="INSUM_button_menu" class="a-Menu" style="position: absolute; top: 39px; right:20px; display: none;" tabindex="-1" role="menu">	  <div class="a-Menu-content"><ul id="INSUM_button_menu_ul"></ul></div></div>');
+
+	$insumButton.bind('click', function(e) {
+		// e.preventDefault();
+		console.log('Insum logo clicked');
+		$("#INSUM_button_menu").toggle();
+	})
+	window.INSUMCOUNTER = window.INSUMCOUNTER || 1;
+}
+
+/**
+ * @callback toggleChangeCallback
+ * @param {object} thisObject 'this' is passed into the function
+ * @param {(string|Number|Boolean)} thisValue value for 'this.value' is sent to the callback
+*/
+
+/**
+* This function adds toggle options to IN dropdown menu on page designer.
+*	@function addOptionToINMenu
+* @param {string} label Label for toggle button
+* @param {string} on_label Lable for toggle button True value
+* @param {string} off_label Lable for toggle button False value
+* @param {(string|Number|Boolean)} on_value internal value when toggle is on
+* @param {(string|Number|Boolean)} off_value internal value when toggle is off
+* @param {(string|Number|Boolean)} on_value internal value when toggle is on
+* @param {toggleChangeCallback} callback callback function handles the onchange response for change of value.
+*/
+function addOptionToINMenu(label, on_label, off_label, on_value, off_value, callback){
+	let $fieldset = $("#INSUM_button_menu_ul").append(`<li><div style="padding: 10px"><label>${label}</label><fieldset data-INSUMapexProID=${window.INSUMCOUNTER} class="apex-button-group apex-item-yes-no"><legend class="u-VisuallyHidden">switch_label</legend><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value=${on_value} required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" class="a-Button">${on_label}</label><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_N" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value="${off_value}" checked="checked" required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_N" class="a-Button">${off_label}</label><input type="hidden" name="INSUM_SWITCH" value="TODO" id="INSUM_SWITCH_${window.INSUMCOUNTER}" autocomplete="off"></fieldset></div></li>`);
+
+	$(`#INSUM_SWITCH_${window.INSUMCOUNTER}`).on('change', function(){
+		callback(this, this.value);
+	});
+
+	window.INSUMCOUNTER += 1;
 }
 
 addInsumLogo();
-
-
 
 
 //SAP stands for "show altered properties"
@@ -97,7 +133,9 @@ addInsumLogo();
 		);
 
 
-
+		/**
+		* @function listenForChangesToCompAndCompType
+		*/
 		function listenForChangesToCompAndCompType() {
 				$(document).bind('selectionChanged',function(e,name,components) {
 					if(components && components.length) {
@@ -108,7 +146,10 @@ addInsumLogo();
 			});
 		}
 
-		//This function creates the "Filter Defaults" button
+		/**
+		* This function creates the "Filter Defaults" button
+		* @function createFilterButton
+		*/
 		function createFilterButton() {
 			$('#peToolbar .a-Toolbar-items.a-Toolbar-items--left').append('<button class="a-Button a-Button--noLabel a-Button--withIcon" ' +
 																																		'onclick="void(0);" aria-label="Show Non-Defaults Only" type="button" '+
@@ -135,6 +176,9 @@ addInsumLogo();
 			});
 		}
 
+		/**
+		* @function createHighlightButton
+		*/
 		function createHighlightButton() {
 			$('#peToolbar .a-Toolbar-items.a-Toolbar-items--left').append('<button class="a-Button a-Button--noLabel a-Button--withIcon" ' +
 																																		'onclick="void(0);" aria-label="Toggle Non-Defaults" type="button" ' +
@@ -166,11 +210,19 @@ addInsumLogo();
 			});
 		}
 
+		/**
+		* @function setCookie
+		* @param {} cname
+		* @param {} cvalue
+		*/
 		function setCookie(cname, cvalue) {
 				document.cookie = cname + "=" + cvalue + ";" + "path=/";
 		}
 
-
+		/**
+		* @function getCookie
+		* @param {} name
+		*/
 		function getCookie(name){
 				var pattern = RegExp(name + "=.[^;]*")
 				matched = document.cookie.match(pattern)
@@ -181,6 +233,10 @@ addInsumLogo();
 				return false
 	}
 
+	/**
+	* @function deReferenceProps
+	* @param {} properties
+	*/
 	function deReferenceProps(properties) {
 		//console.log('properties to dereferenc:', properties);
 			for (var key in properties) {
@@ -263,6 +319,10 @@ addInsumLogo();
 			return properties;
 	}
 
+	/**
+	* @function attemptDeReference
+	* @param {} val
+	*/
 	function attemptDeReference(val) {
 			let all = pe.getAll();
 			let currentPageId = pe.getCurrentPageId();
@@ -329,13 +389,19 @@ addInsumLogo();
 			return "";
 	}
 
+	/**
+	* @function format
+	* @param {} pKey
+	*/
 	function format(pKey) { //Copied from pe code
 			var pattern = apex.lang.getMessage("MODEL." + pKey),
 					args = [pattern].concat(Array.prototype.slice.call(arguments, 1));
 			return apex.lang.format.apply(this, args);
 	}
 
-
+	/**
+	* @function initOrResetAllData
+	*/
 	function initOrResetAllData() {
 			SAP.allData = null;
 			var interval = setInterval(function() {
@@ -354,6 +420,10 @@ addInsumLogo();
 			}, 10);
 	}
 
+
+	/**
+	* @function createMutationObserver
+	*/
 	function createMutationObserver() {
 			let target = $('#peComponentProperties')[0];
 			let observer = new MutationObserver(function(mutations) {
@@ -454,16 +524,21 @@ addInsumLogo();
 
 
 
-
-	//Assumption SAP.currentNodes is populated with the nodes we want to check
+	/**
+	* Assumption SAP.currentNodes is populated with the nodes we want to check
+	* @function updatePropertyNodes
+	*/
 	function updatePropertyNodes() {
 			getAllProperties();
 			compareFieldsToDefaults();
 	}
 
-	//This function first gets the currentComponentType and currentComponentTypeId
-	//The function then sets SAP.currentProps to the properties contained in SAP.currentNodes. It also de-references those properties.
-	//ASSSUMPTION: SAP.currentNodes is populated.
+	/**
+	* This function first gets the currentComponentType and currentComponentTypeId
+	* The function then sets SAP.currentProps to the properties contained in SAP.currentNodes. It also de-references those properties.
+	* ASSSUMPTION: SAP.currentNodes is populated.
+	* @function getAllProperties
+	*/
 	function getAllProperties() {
 
 		let nonDefaultItems = [];
@@ -493,7 +568,10 @@ addInsumLogo();
 		SAP.currentProps = deReferenceProps(SAP.currentProps);
 	}
 
-	//Assumption: SAP.currentProps and SAP.currentNodes have been correctly instantiated
+	/**
+	* Assumption: SAP.currentProps and SAP.currentNodes have been correctly instantiated
+	* @function compareFieldsToDefaults
+	*/
 	function compareFieldsToDefaults() {
 			//console.log(SAP.currentNodes);
 			let typeId = SAP.currentComponentTypeId;
@@ -561,6 +639,11 @@ addInsumLogo();
 			}
 	}
 
+	/**
+	* @function addOrRemoveHighlighting
+	* @param {} toHighlight
+	* @param {} toDeHighlight
+	*/
 	function addOrRemoveHighlighting(toHighlight, toDeHighlight) {
 		//console.log('allNonDefaultNodes', allNonDefaultNodes)
 		$.each(toHighlight, function() {
@@ -583,6 +666,11 @@ addInsumLogo();
 
 	}
 
+	/**
+	* @function hideOrShowItems
+	* @param {} toShow
+	* @param {} toHide
+	*/
 	function hideOrShowItems(toShow, toHide) {
 
 		$.each($('#peComponentProperties [data-property-id]'), function() {
@@ -645,7 +733,10 @@ addInsumLogo();
 
 })(window.SAP = window.SAP || {});
 
-	// Persistent cursor position
+	/**
+	* Make cursor persistent on selected property in property pane on page editor
+	* @function focusLastSelectedProperty
+	*/
 	function focusLastSelectedProperty(){
 		// console.log('inside focusLastSelectedProperty');
 		// get curretly selected property id
@@ -666,7 +757,12 @@ addInsumLogo();
 
 	focusLastSelectedProperty();
 
-	// Persistent filter properties
+	/**
+	* Make filter properties peristent over different components.
+	* When the user selects different components on the rendering page the filter properties on
+	* properties stay consistent.
+	* @function persistentFocusProperties
+	*/
 	function persistentFocusProperties(textToFilter){
 		// console.log("inside persistentFocusProperties");
 
@@ -691,6 +787,7 @@ addInsumLogo();
 	}
 
 	persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+
 
 }
 
