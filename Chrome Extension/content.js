@@ -23,6 +23,22 @@ function addInsumLogo() {
 	window.INSUMCOUNTER = window.INSUMCOUNTER || 1;
 }
 
+/**
+ * @callback toggleChangeCallback
+ * @param {object} thisObject 'this' is passed into the function
+ * @param {(string|Number|Boolean)} thisValue value for 'this.value' is sent to the callback
+*/
+
+/**
+*	@function addOptionToINMenu
+* @param {string} label Label for toggle button
+* @param {string} on_label Lable for toggle button True value
+* @param {string} off_label Lable for toggle button False value
+* @param {(string|Number|Boolean)} on_value internal value when toggle is on
+* @param {(string|Number|Boolean)} off_value internal value when toggle is off
+* @param {(string|Number|Boolean)} on_value internal value when toggle is on
+* @param {toggleChangeCallback} callback callback function handles the onchange response for change of value.
+*/
 function addOptionToINMenu(label, on_label, off_label, on_value, off_value, callback){
 	let $fieldset = $("#INSUM_button_menu_ul").append(`<li><div style="padding: 10px"><label>${label}</label><fieldset data-INSUMapexProID=${window.INSUMCOUNTER} class="apex-button-group apex-item-yes-no"><legend class="u-VisuallyHidden">switch_label</legend><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value=${on_value} required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" class="a-Button">${on_label}</label><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_N" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value="${off_value}" checked="checked" required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_N" class="a-Button">${off_label}</label><input type="hidden" name="INSUM_SWITCH" value="TODO" id="INSUM_SWITCH_${window.INSUMCOUNTER}" autocomplete="off"></fieldset></div></li>`);
 
