@@ -21,16 +21,13 @@ function addInsumLogo() {
 		$("#INSUM_button_menu").toggle();
 	})
 	window.INSUMCOUNTER = window.INSUMCOUNTER || 1;
-	addOptionToINMenu('Toggle Test', 'Enable', 'Disable', true, false, function(option){
-		console.log(option);
-	});
 }
 
 function addOptionToINMenu(label, on_label, off_label, on_value, off_value, callback){
-	let $fieldset = $("#INSUM_button_menu_ul").append(`<li><label>${label}</label><fieldset data-INSUMapexProID=${window.INSUMCOUNTER} class="apex-button-group apex-item-yes-no"><legend class="u-VisuallyHidden">switch_label</legend><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value=${on_value} required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" class="a-Button">${on_label}</label><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_N" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value="${off_value}" checked="checked" required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_N" class="a-Button">${off_label}</label><input type="hidden" name="INSUM_SWITCH" value="TODO" id="INSUM_SWITCH_${window.INSUMCOUNTER}" autocomplete="off"></fieldset></li>`);
+	let $fieldset = $("#INSUM_button_menu_ul").append(`<li><div style="padding: 10px"><label>${label}</label><fieldset data-INSUMapexProID=${window.INSUMCOUNTER} class="apex-button-group apex-item-yes-no"><legend class="u-VisuallyHidden">switch_label</legend><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value=${on_value} required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_Y" class="a-Button">${on_label}</label><input type="radio" id="INSUM_SWITCH_${window.INSUMCOUNTER}_N" name="INSUM_SWITCH_${window.INSUMCOUNTER}_NOSUBMIT" value="${off_value}" checked="checked" required="" aria-required="true" onclick="$x_Value('INSUM_SWITCH_${window.INSUMCOUNTER}',this.value)"><label for="INSUM_SWITCH_${window.INSUMCOUNTER}_N" class="a-Button">${off_label}</label><input type="hidden" name="INSUM_SWITCH" value="TODO" id="INSUM_SWITCH_${window.INSUMCOUNTER}" autocomplete="off"></fieldset></div></li>`);
 
-	$fieldset.on('change', function(){
-		console.log($(`#INSUM_SWITCH_${window.INSUMCOUNTER}`).val());
+	$(`#INSUM_SWITCH_${window.INSUMCOUNTER}`).on('change', function(){
+		callback(this, this.value);
 	});
 
 	window.INSUMCOUNTER += 1;
