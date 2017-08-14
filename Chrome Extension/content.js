@@ -826,6 +826,7 @@ addInsumLogo();
 
 	/**
 	 * @function pageItemsToSubmit
+	 * This function will mark items already selected red in the list upon invocation of popup
 	 */
 	function pageItemsToSubmit(){
 		/*
@@ -848,6 +849,8 @@ addInsumLogo();
 		 $(document).on("selectionChanged.pageItemsToSubmit", function(e, name, component) {
 		   $.each($("[id^=pe_][id$=lovBtn]"), function() {
 		     $(this).on('click.pageItemsToSubmit', function() {
+					 // this function is defined after this funtion
+					 autoSearchPagePopupLov();
 		       let currentValueInput;
 		       let tdElement = $(this).parent().prev().children().val();
 		       let intervalTimer;
@@ -878,6 +881,16 @@ addInsumLogo();
 	}
 
 	pageItemsToSubmit();
+
+	/**
+	 * @function autoSearchPagePopupLov
+	 * This function will trigger search on available items whenever user starts typing.
+	 */
+	function autoSearchPagePopupLov(){
+		$("#lovDlg_search").on('keyup.autoSearchPagePopupLov', function(){
+			$("#lovDlg_search_button").trigger('click');
+		})
+	}
 
 }
 
