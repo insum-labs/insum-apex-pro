@@ -823,9 +823,62 @@ addInsumLogo();
 		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 	});
 
+
+	/**
+	 * @function pageItemsToSubmit
+	 */
+	function pageItemsToSubmit(){
+		/*
+			 Property-IDs:
+			   215:
+				 88: Affected Elements selection
+				 "888122401495541038": Dynamic action execute PL/SQL code - Items to Return
+				 "1811567115248315739": Dynamic action execute PL/SQL code - Items to Submit
+
+				 **Update: We probably do not need these id's as we can just use the regex for the button.
+
+			 Button IDs
+			    There are many places on the page where that button ID is dynamically generated.
+					So, we can use this RegExp "pe_\d+_lovBtn" for whiuch corresponding jQuery Selector
+					is $("[id^=pe_][id$=lovBtn]").
+			 Popup Values:
+			 		'lovDlg_lovEntries' this is the id for the popup window from where we can get all the
+					row and values.
+		 */
+		 $(document).on("selectionChanged.pageItemsToSubmit", function(e, name, component) {
+		   $.each($("[id^=pe_][id$=lovBtn]"), function() {
+		     $(this).on('click.pageItemsToSubmit', function() {
+		       let currentValueInput;
+		       let tdElement = $(this).parent().prev().children().val();
+		       let intervalTimer;
+		       if (tdElement.search(',') > -1) {
+		         currentValueInput = tdElement.split(',');
+		         intervalTimer = 0; // immediately check
+		       } else if (tdElement.search(' ') > -1) {
+		         currentValueInput = tdElement.split(' ');
+		         intervalTimer = 30;
+		       } else {
+		         currentValueInput = tdElement;
+		         intervalTimer = 30;
+		       }
+		       let intervalCounter = 0;
+		       let interval = setInterval(function() {
+		         $("#lovDlg_lovEntries > tbody").children().each(function() {
+		           if (currentValueInput.indexOf($($(this).children()[0]).text()) > -1) {
+		             $($($(this).children()[0]).children()[0]).css('color', 'red');
+		             // console.log($($($(this).children()[0]).children()[0]).text());
+		           }
+		         });
+		         // check if total iterations is 10 or not.
+		         (intervalCounter === 10 || intervalTimer === 0) ? clearInterval(interval) : intervalCounter++;
+		       }, intervalTimer);
+		     });
+		   });
+		 });
+	}
+
+	pageItemsToSubmit();
+
 }
-
-
-
 
 append(appendToPage);
