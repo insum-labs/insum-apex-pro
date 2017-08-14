@@ -848,7 +848,45 @@ addInsumLogo();
 		$(document).on("selectionChanged.pageItemsToSubmit", function(e, name, component){
 			$.each( $("[id^=pe_][id$=lovBtn]"),  function(){
 				$(this).on('click.pageItemsToSubmit', function(){
-					console.log($("#lovDlg_lovEntries > tbody").children().length);
+
+					if( $(this).parent().prev().children().val().search(',') > -1 ){
+						let currentValueInput = $(this).parent().prev().children().val().split(',');
+						console.log("Current Value(,): ", currentValueInput);
+						// console.log($("#lovDlg_lovEntries > tbody").children().length);
+						$("#lovDlg_lovEntries > tbody").children().each(function(){
+							if( currentValueInput.indexOf($($(this).children()[0]).text()) > -1){
+								$($($(this).children()[0]).children()[0]).css('color', 'red');
+								console.log($($($(this).children()[0]).children()[0]).text());
+							}
+						})
+					}
+					else if( $(this).parent().prev().children().val().search(' ') > -1 ){
+						let currentValueInput = $(this).parent().prev().children().val().split(' ');
+						console.log("Current Value( ) ", currentValueInput);
+						// console.log($("#lovDlg_lovEntries > tbody").children().length);
+						let intvl = setInterval((function(){
+							$("#lovDlg_lovEntries > tbody").children().each(function(){
+							console.log($($($(this).children()[0]).children()[0]));
+							if( currentValueInput.indexOf($($(this).children()[0]).text()) > -1){
+								$($($(this).children()[0]).children()[0]).css('color', 'red');
+								console.log($($($(this).children()[0]).children()[0]).text());
+							}
+
+							clearInterval(intvl);
+
+						})}, 1000);
+					}
+					else{
+						let currentValueInput = $(this).parent().prev().children().val();
+						console.log("Current Value: ", currentValueInput);
+						// console.log($("#lovDlg_lovEntries > tbody").children().length);
+						$("#lovDlg_lovEntries > tbody").children().each(function(){
+							if( currentValueInput.indexOf($($(this).children()[0]).text()) > -1){
+								$($($(this).children()[0]).children()[0]).css('color', 'red');
+								console.log($($($(this).children()[0]).children()[0]).text());
+							}
+						})
+					}
 				});
 			});
 		});
