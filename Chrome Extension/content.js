@@ -823,9 +823,38 @@ addInsumLogo();
 		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 	});
 
+
+	/**
+	 * @function pageItemsToSubmit
+	 */
+	function pageItemsToSubmit(){
+		/*
+			 Property-IDs:
+			   215:
+				 88: Affected Elements selection
+				 "888122401495541038": Dynamic action execute PL/SQL code - Items to Return
+				 "1811567115248315739": Dynamic action execute PL/SQL code - Items to Submit
+
+				 Update: We probably do not need these id's as we can just use the regex for the button.
+			 Button IDs
+			    There are many places on the page where that button ID is dynamically generated.
+					So, we can use this RegExp "pe_\d+_lovBtn" for whiuch corresponding jQuery Selector
+					is $("[id^=pe_][id$=lovBtn]").
+		 */
+		$(document).on("selectionChanged.pageItemsToSubmit", function(e, name, component){
+			// $(document).on("click.pageItemsToSubmit", function(){
+			// 	if( [215, 88, "888122401495541038", "1811567115248315739"].indexOf($(document.activeElement).data("property-id")) > -1 ){
+			// 		console.log("pageItemsToSubmit");
+			// 	}
+			// });
+			$("[id^=pe_][id$=lovBtn]").on('click', function(){
+
+			});
+		});
+	}
+
+	pageItemsToSubmit();
+
 }
-
-
-
 
 append(appendToPage);
