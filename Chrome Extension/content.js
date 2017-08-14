@@ -845,51 +845,36 @@ addInsumLogo();
 			 		'lovDlg_lovEntries' this is the id for the popup window from where we can get all the
 					row and values.
 		 */
-		$(document).on("selectionChanged.pageItemsToSubmit", function(e, name, component){
-			$.each( $("[id^=pe_][id$=lovBtn]"),  function(){
-				$(this).on('click.pageItemsToSubmit', function(){
-
-					if( $(this).parent().prev().children().val().search(',') > -1 ){
-						let currentValueInput = $(this).parent().prev().children().val().split(',');
-						console.log("Current Value(,): ", currentValueInput);
-						// console.log($("#lovDlg_lovEntries > tbody").children().length);
-						$("#lovDlg_lovEntries > tbody").children().each(function(){
-							if( currentValueInput.indexOf($($(this).children()[0]).text()) > -1){
-								$($($(this).children()[0]).children()[0]).css('color', 'red');
-								console.log($($($(this).children()[0]).children()[0]).text());
-							}
-						})
-					}
-					else if( $(this).parent().prev().children().val().search(' ') > -1 ){
-						let currentValueInput = $(this).parent().prev().children().val().split(' ');
-						console.log("Current Value( ) ", currentValueInput);
-						// console.log($("#lovDlg_lovEntries > tbody").children().length);
-						let intvl = setInterval((function(){
-							$("#lovDlg_lovEntries > tbody").children().each(function(){
-							console.log($($($(this).children()[0]).children()[0]));
-							if( currentValueInput.indexOf($($(this).children()[0]).text()) > -1){
-								$($($(this).children()[0]).children()[0]).css('color', 'red');
-								console.log($($($(this).children()[0]).children()[0]).text());
-							}
-
-							clearInterval(intvl);
-
-						})}, 1000);
-					}
-					else{
-						let currentValueInput = $(this).parent().prev().children().val();
-						console.log("Current Value: ", currentValueInput);
-						// console.log($("#lovDlg_lovEntries > tbody").children().length);
-						$("#lovDlg_lovEntries > tbody").children().each(function(){
-							if( currentValueInput.indexOf($($(this).children()[0]).text()) > -1){
-								$($($(this).children()[0]).children()[0]).css('color', 'red');
-								console.log($($($(this).children()[0]).children()[0]).text());
-							}
-						})
-					}
-				});
-			});
-		});
+		 $(document).on("selectionChanged.pageItemsToSubmit", function(e, name, component) {
+		   $.each($("[id^=pe_][id$=lovBtn]"), function() {
+		     $(this).on('click.pageItemsToSubmit', function() {
+		       let currentValueInput;
+		       let tdElement = $(this).parent().prev().children().val();
+		       let intervalTimer;
+		       if (tdElement.search(',') > -1) {
+		         currentValueInput = tdElement.split(',');
+		         intervalTimer = 0; // immediately check
+		       } else if (tdElement.search(' ') > -1) {
+		         currentValueInput = tdElement.split(' ');
+		         intervalTimer = 30;
+		       } else {
+		         currentValueInput = tdElement;
+		         intervalTimer = 30;
+		       }
+		       let intervalCounter = 0;
+		       let interval = setInterval(function() {
+		         $("#lovDlg_lovEntries > tbody").children().each(function() {
+		           if (currentValueInput.indexOf($($(this).children()[0]).text()) > -1) {
+		             $($($(this).children()[0]).children()[0]).css('color', 'red');
+		             // console.log($($($(this).children()[0]).children()[0]).text());
+		           }
+		         });
+		         // check if total iterations is 10 or not.
+		         (intervalCounter === 10 || intervalTimer === 0) ? clearInterval(interval) : intervalCounter++;
+		       }, intervalTimer);
+		     });
+		   });
+		 });
 	}
 
 	pageItemsToSubmit();
