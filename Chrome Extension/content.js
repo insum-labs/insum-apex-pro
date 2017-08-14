@@ -835,20 +835,21 @@ addInsumLogo();
 				 "888122401495541038": Dynamic action execute PL/SQL code - Items to Return
 				 "1811567115248315739": Dynamic action execute PL/SQL code - Items to Submit
 
-				 Update: We probably do not need these id's as we can just use the regex for the button.
+				 **Update: We probably do not need these id's as we can just use the regex for the button.
+
 			 Button IDs
 			    There are many places on the page where that button ID is dynamically generated.
 					So, we can use this RegExp "pe_\d+_lovBtn" for whiuch corresponding jQuery Selector
 					is $("[id^=pe_][id$=lovBtn]").
+			 Popup Values:
+			 		'lovDlg_lovEntries' this is the id for the popup window from where we can get all the
+					row and values.
 		 */
 		$(document).on("selectionChanged.pageItemsToSubmit", function(e, name, component){
-			// $(document).on("click.pageItemsToSubmit", function(){
-			// 	if( [215, 88, "888122401495541038", "1811567115248315739"].indexOf($(document.activeElement).data("property-id")) > -1 ){
-			// 		console.log("pageItemsToSubmit");
-			// 	}
-			// });
-			$("[id^=pe_][id$=lovBtn]").on('click', function(){
-
+			$.each( $("[id^=pe_][id$=lovBtn]"),  function(){
+				$(this).on('click.pageItemsToSubmit', function(){
+					console.log($("#lovDlg_lovEntries > tbody").children().length);
+				});
 			});
 		});
 	}
