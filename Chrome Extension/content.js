@@ -26,7 +26,7 @@ function addInsumLogo() {
 
 	$insumButton.bind('click', function(e) {
 		// e.preventDefault();
-		console.log('Insum logo clicked');
+		// console.log('Insum logo clicked');
 		$("#INSUM_button_menu").toggle();
 	})
 	window.INSUMCOUNTER = window.INSUMCOUNTER || 1;
@@ -794,7 +794,7 @@ addInsumLogo();
 				$("#pe > div.a-PropertyEditor-filter > input").on('keyup', function(){
 						currentFilter = $(this).val();
 						textToFilter = currentFilter;
-						console.log(currentFilter);
+						// console.log(currentFilter);
 					});
 
 			});
