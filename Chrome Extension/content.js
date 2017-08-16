@@ -775,6 +775,7 @@ addInsumLogo();
 	addOptionToINMenu(label="Focus Last Propery Selected", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("LastSeclectedPropCookie"), callback=function(object, object_value, id){
 		window.SetCookie("LastSeclectedPropCookie", object_value);
 		focusLastSelectedProperty();
+		$(document).trigger("click.updateCurrentSelection");
 	});
 
 	/**
@@ -821,11 +822,13 @@ addInsumLogo();
 	addOptionToINMenu(label="Persistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("PersistentFocusCookie"), callback=function(object, object_value, id){
 		window.SetCookie("PersistentFocusCookie", object_value);
 		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+		$(document).trigger("selectionChanged.PersistentFocus_1");
 	});
 
 
 	/**
 	 * @function pageItemsToSubmit
+	 * This function will mark items already selected red in the list upon invocation of popup
 	 */
 	function pageItemsToSubmit(){
 		/*
@@ -848,6 +851,8 @@ addInsumLogo();
 		 $(document).on("selectionChanged.pageItemsToSubmit", function(e, name, component) {
 		   $.each($("[id^=pe_][id$=lovBtn]"), function() {
 		     $(this).on('click.pageItemsToSubmit', function() {
+					 // this function is defined after this funtion
+					 autoSearchPagePopupLov();
 		       let currentValueInput;
 		       let tdElement = $(this).parent().prev().children().val();
 		       let intervalTimer;
@@ -878,6 +883,16 @@ addInsumLogo();
 	}
 
 	pageItemsToSubmit();
+
+	/**
+	 * @function autoSearchPagePopupLov
+	 * This function will trigger search on available items whenever user starts typing.
+	 */
+	function autoSearchPagePopupLov(){
+		$("#lovDlg_search").on('keyup.autoSearchPagePopupLov', function(){
+			$("#lovDlg_search_button").trigger('click');
+		})
+	}
 
 }
 
