@@ -775,6 +775,7 @@ addInsumLogo();
 	addOptionToINMenu(label="Focus Last Propery Selected", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("LastSeclectedPropCookie"), callback=function(object, object_value, id){
 		window.SetCookie("LastSeclectedPropCookie", object_value);
 		focusLastSelectedProperty();
+		$(document).trigger("click.updateCurrentSelection");
 	});
 
 	/**
@@ -821,6 +822,7 @@ addInsumLogo();
 	addOptionToINMenu(label="Persistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("PersistentFocusCookie"), callback=function(object, object_value, id){
 		window.SetCookie("PersistentFocusCookie", object_value);
 		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+		$(document).trigger("selectionChanged.PersistentFocus_1");
 	});
 
 
