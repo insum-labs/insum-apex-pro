@@ -1,0 +1,4 @@
+Changes to make
+7. Using gApexVersion, if we are version 5.1 or higher, add event handler 'onclick' for input that changes background-color to "on color",
+    and change it's sister's background-color to "off color".
+8. Include version check in filter-feature
