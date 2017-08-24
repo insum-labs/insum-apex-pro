@@ -15,12 +15,9 @@
         "content.js"
       ],
       "matches": [
-        "http://*/*/f?p=4000:4500*",
-        "https://*/*/f?p=4000:4500*",
-        "https://*/*/*/wwv_flow.accept",
-        "http://*/*/*/wwv_flow.accept",
-        "https://*/*/wwv_flow.accept",
-        "http://*/*/wwv_flow.accept"
+        "*://*/*/f?p=4000:4500*",
+        "*://*/*/*/wwv_flow.accept",
+        "*://*/*/wwv_flow.accept"
       ],
       "run_at": "document_end"
     }
