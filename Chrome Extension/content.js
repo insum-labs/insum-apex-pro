@@ -2,7 +2,7 @@
 
 
 
-console.log('Running Apex Property Highlighter');
+//console.log('Running Insum-Apex-Pro');
 
 /**
 * @function append
@@ -29,7 +29,7 @@ function addInsumLogo() {
 
 	$('body').append('<div id="INSUM_button_menu" class="a-Menu" style="position: absolute; top: 39px; right:20px; display: none;" tabindex="-1" role="menu">	  <div class="a-Menu-content"><ul id="INSUM_button_menu_ul"></ul></div></div>');
 
-	console.log($insumButton);
+	//console.log($insumButton);
 
 	let isInClick = false;
 	$('#in-logo').on('click.inClick', function(e) {
