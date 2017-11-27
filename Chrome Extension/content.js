@@ -2,7 +2,7 @@
 
 
 
-//console.log('Running Insum-Apex-Pro');
+console.log('Running Insum-Apex-Pro');
 
 /**
 * @function append
@@ -15,42 +15,48 @@ function append(func, params) {
 		$('body').append(script);
 }
 
-let appendToPage = function() {
+
+
+
+
+
+
+let appendToPage = function(userPreferences) {
 
 /**
 * Add the inSum logo
 * @function addInsumLogo
 */
 
-function addInsumLogo() {
+	function addInsumLogo() {
 
-	let $insumButton = $('.a-Header-col.a-Header-col--right').append('<button type="button" id="in-logo" class="a-Button a-Button--noLabel a-Button--iconTextButton a-Button--noUI a-Button--navLink js-menuButton a-Button--accountMenu"><image style="height:20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAYAAAAKsfL4AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4QccEzoIjDEd0gAAA31JREFUeNrt2k9Ik3Ecx/HvM5zS3HRbGraJMkk2u8hKghFeDOZFOgRSgvTnogieFLKDHQIPJiRdTShP7WYQIbiDQQOhKMkSbcscyHwwN9l0+swp7telDbPI+Tz792yf983B8/js99pvz/P8nnErYR971PuQxDQx8ZwjJCkFhgAAAEAAAAACAAAQAACAAAAABAAAoMzEMcYwCpgBAEAAAAACAABQhisqxDfNC34Wje3T3uE+8RF/4nV9cRlpizWJv01qY9p/dFAUPhAoEA2KuhlI5gDTvf//tRkNDX8Oega8u2v0IbBA5pjztLtgRERuhZ1u1rZSndpIZcrSx2dLtA9SdiO2Evaxya+3RG3cb3OdOEDenbW07v8otE/4yfiIn+ZDHmLBsbR+csvP9dFlXQNZ9RauYL+C4oP+JeQhHz+U0f+9tTFKMxtEHsMga668RAZVJVcwAG/W3rH3gQXSCo6sH4uPHyIHT+RW2Nm9uutkq2zk8hKAF/zM5Z9LfNK1OXZ85piTZpedNMV3sJ769qRnRFGuf8UshL6zFyuvxZxAs5JWcJBj3kFdTdOkUarkfR/w7GMrm13ulc3g/3EBMfeE8YKfyRpAzpljTnLM36CTEACQ5k5CAECGEDajoWEAZLGn314OhA8EAORaAMjg5ekU72IAyPJdc14sRaQqTtf912vpXsQrOIBqwyBVlOioTm0komSWuDsTS+jrkQCtCuspXejz7qyxo8eQVwBuhZ2uVV2hGlUVVZ2pEP08QaNUkUap4kxqI9mokcKGZhr/MclSMTte+d5Sn6Uzv2YAp+umO6a2lD4oOQ7SZ+nklrausqnF25L2xYJjtBltG44fq2wB4g9ELmhquGQWvVJRQ7mJq26appHFCSZlKXx1d31A1gBdTdMZG/R/zYb7F+9yI4skGuFTcImseou8LkPdCju1mMep3+bK2uAfR3Ar7KK239oYlc85wK2wU099O/VLfPaaDoSe+naacYtbKo8v0OU0QIt5POcG/mhWvYWb+f3LidO2tO3N/RlgzeHBl1rkcA93wtnME16V10k4X8MMyFLB6DZmQCoKqTpEbacVHKQVHACQWq36vKTtASAxU6kRAHIOAAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAJLQL4pcMzh4pdIjAAAAAElFTkSuQmCC"><image></button>');
+		let $insumButton = $('.a-Header-col.a-Header-col--right').append('<button type="button" id="in-logo" class="a-Button a-Button--noLabel a-Button--iconTextButton a-Button--noUI a-Button--navLink js-menuButton a-Button--accountMenu"><image style="height:20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAYAAAAKsfL4AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4QccEzoIjDEd0gAAA31JREFUeNrt2k9Ik3Ecx/HvM5zS3HRbGraJMkk2u8hKghFeDOZFOgRSgvTnogieFLKDHQIPJiRdTShP7WYQIbiDQQOhKMkSbcscyHwwN9l0+swp7telDbPI+Tz792yf983B8/js99pvz/P8nnErYR971PuQxDQx8ZwjJCkFhgAAAEAAAAACAAAQAACAAAAABAAAoMzEMcYwCpgBAEAAAAACAABQhisqxDfNC34Wje3T3uE+8RF/4nV9cRlpizWJv01qY9p/dFAUPhAoEA2KuhlI5gDTvf//tRkNDX8Oega8u2v0IbBA5pjztLtgRERuhZ1u1rZSndpIZcrSx2dLtA9SdiO2Evaxya+3RG3cb3OdOEDenbW07v8otE/4yfiIn+ZDHmLBsbR+csvP9dFlXQNZ9RauYL+C4oP+JeQhHz+U0f+9tTFKMxtEHsMga668RAZVJVcwAG/W3rH3gQXSCo6sH4uPHyIHT+RW2Nm9uutkq2zk8hKAF/zM5Z9LfNK1OXZ85piTZpedNMV3sJ769qRnRFGuf8UshL6zFyuvxZxAs5JWcJBj3kFdTdOkUarkfR/w7GMrm13ulc3g/3EBMfeE8YKfyRpAzpljTnLM36CTEACQ5k5CAECGEDajoWEAZLGn314OhA8EAORaAMjg5ekU72IAyPJdc14sRaQqTtf912vpXsQrOIBqwyBVlOioTm0komSWuDsTS+jrkQCtCuspXejz7qyxo8eQVwBuhZ2uVV2hGlUVVZ2pEP08QaNUkUap4kxqI9mokcKGZhr/MclSMTte+d5Sn6Uzv2YAp+umO6a2lD4oOQ7SZ+nklrausqnF25L2xYJjtBltG44fq2wB4g9ELmhquGQWvVJRQ7mJq26appHFCSZlKXx1d31A1gBdTdMZG/R/zYb7F+9yI4skGuFTcImseou8LkPdCju1mMep3+bK2uAfR3Ar7KK239oYlc85wK2wU099O/VLfPaaDoSe+naacYtbKo8v0OU0QIt5POcG/mhWvYWb+f3LidO2tO3N/RlgzeHBl1rkcA93wtnME16V10k4X8MMyFLB6DZmQCoKqTpEbacVHKQVHACQWq36vKTtASAxU6kRAHIOAAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAJLQL4pcMzh4pdIjAAAAAElFTkSuQmCC"><image></button>');
 
 
-	$('body').append('<div id="INSUM_button_menu" class="a-Menu" style="position: absolute; top: 39px; right:20px; display: none;" tabindex="-1" role="menu">	  <div class="a-Menu-content"><ul id="INSUM_button_menu_ul"></ul></div></div>');
+		$('body').append('<div id="INSUM_button_menu" class="a-Menu" style="position: absolute; top: 39px; right:20px; display: none;" tabindex="-1" role="menu">	  <div class="a-Menu-content"><ul id="INSUM_button_menu_ul"></ul></div></div>');
 
-	//console.log($insumButton);
+		//console.log($insumButton);
 
-	let isInClick = false;
-	$('#in-logo').on('click.inClick', function(e) {
-		// e.preventDefault();
-		// console.log('Insum logo clicked');
-		$("#INSUM_button_menu").toggle();
-		isInClick = true;
-	});
+		let isInClick = false;
+		$('#in-logo').on('click.inClick', function(e) {
+			// e.preventDefault();
+			// console.log('Insum logo clicked');
+			$("#INSUM_button_menu").toggle();
+			isInClick = true;
+		});
 
-	$('body').on('click.inClick', function(e) {
-		if(!isInClick) {
-			$('#INSUM_button_menu').hide();
-		}
-		isInClick = false;
-	});
-	window.INSUMCOUNTER = window.INSUMCOUNTER || 1;
+		$('body').on('click.inClick', function(e) {
+			if(!isInClick) {
+				$('#INSUM_button_menu').hide();
+			}
+			isInClick = false;
+		});
+		window.INSUMCOUNTER = window.INSUMCOUNTER || 1;
 
-	$('#INSUM_button_menu').on('click',function(e) {
-		e.stopPropagation();
-	});
-}
+		$('#INSUM_button_menu').on('click',function(e) {
+			e.stopPropagation();
+		});
+	}
 
 /**
  * @callback toggleChangeCallback
@@ -172,7 +178,7 @@ addInsumLogo();
 					$('#pe_toggleNonDefaults').css('background-color','#FFFFFF');
 					$('#pe_toggleNonDefaults').css('border','none');
 				}
-		}) ;
+		});
 
 
 		$('body').on('change','#go_to_page',
@@ -261,28 +267,7 @@ addInsumLogo();
 			});
 		}
 
-		/**
-		* @function setCookie
-		* @param {} cname
-		* @param {} cvalue
-		*/
-		function setCookie(cname, cvalue) {
-				document.cookie = cname + "=" + cvalue + ";" + "path=/";
-		}
 
-		/**
-		* @function getCookie
-		* @param {} name
-		*/
-		function getCookie(name){
-				var pattern = RegExp(name + "=.[^;]*")
-				matched = document.cookie.match(pattern)
-				if(matched){
-						var cookie = matched[0].split('=')
-						return cookie[1]
-				}
-				return false
-	}
 
 	/**
 	* @function deReferenceProps
@@ -808,7 +793,7 @@ addInsumLogo();
 			})
 		}
 		if(window.GetCookie("LastSeclectedPropCookie") === null){
-			window.SetCookie("LastSeclectedPropCookie", 1);
+			setCookie("LastSeclectedPropCookie", 1);
 			focusLastSelectedProperty();
 		}
 		if(window.GetCookie("LastSeclectedPropCookie") == 0){
@@ -821,7 +806,7 @@ addInsumLogo();
 
 	// Add focusLastSelectedProperty selection to IN menu
 	addOptionToINMenu(label="Focus Last Propery Selected", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("LastSeclectedPropCookie"), callback=function(object, object_value, id){
-		window.SetCookie("LastSeclectedPropCookie", object_value);
+		setCookie("LastSeclectedPropCookie", object_value);
 		focusLastSelectedProperty();
 		$(document).trigger("click.updateCurrentSelection");
 	});
@@ -855,7 +840,7 @@ addInsumLogo();
 			});
 		}
 		if(window.GetCookie("PersistentFocusCookie") === null){
-			window.SetCookie("PersistentFocusCookie", 1);
+			setCookie("PersistentFocusCookie", 1);
 			persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 		}
 		if(window.GetCookie("PersistentFocusCookie") == 0){
@@ -868,7 +853,7 @@ addInsumLogo();
 
 	// Add persistentFocusProperties selection to IN menu
 	addOptionToINMenu(label="Persistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("PersistentFocusCookie"), callback=function(object, object_value, id){
-		window.SetCookie("PersistentFocusCookie", object_value);
+		setCookie("PersistentFocusCookie", object_value);
 		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 		$(document).trigger("selectionChanged.PersistentFocus_1");
 	});
@@ -942,6 +927,70 @@ addInsumLogo();
 		})
 	}
 
+
+	/**
+	* @function setCookie
+	* @param {} cname
+	* @param {} cvalue
+	* TODO: Change the name of setCookie everywhere in this document.
+	*/
+	function setCookie(cname, cvalue) {
+		userPreferences[cname] = cvalue;
+		var message = {isInsumApexProMessage: true, keyval: {'key': cname, 'val': cvalue} };
+		window.postMessage(JSON.stringify(message), '*');
+	}
+
+	/**
+	* @function getCookie
+	* @param {} name
+	*/
+	function getCookie(name){
+			return userPreferences[name];
+	}
+
 }
 
-append(appendToPage);
+
+//Get User Preferences
+chrome.storage.sync.get("allKeys", function(allKeys) {
+	allKeys = allKeys.allKeys;
+	chrome.storage.sync.get(allKeys, function (allKeyValuesObj) {
+	    console.log('allKeyValuesObj', allKeyValuesObj);
+
+			var userPreferences = {};
+
+			for(key in allKeys) {
+				userPreferences[key] = allKeyValuesObj[key];
+			}
+
+			append(appendToPage, userPreferences);
+
+	});
+
+
+});
+
+window.addEventListener("message", function(e) {
+	console.log('Got message ', e.data);
+	try {
+		let data = JSON.parse(e.data);
+		if(data.isInsumApexProMessage) {
+			let key = data.keyval.key;
+			let val = data.keyval.val;
+			chrome.storage.sync.set({key: val}, function() {
+				chrome.storage.sync.get('allKeys', function(allKeys) {
+					if(!allKeys.allKeys) {
+						allKeys.allKeys = {};
+					}
+					allKeys = allKeys.allKeys;
+					allKeys[key] = val;
+					console.log('setting allkeys to: ', allKeys );
+					chrome.storage.sync.set({'allKeys': allKeys});
+				});
+
+			});
+		}
+	} catch(err) {
+
+	}
+}, false);
