@@ -1,7 +1,5 @@
 /*jshint esversion: 6*/
 
-
-
 console.log('Running Insum-Apex-Pro');
 
 /**
@@ -15,48 +13,45 @@ function append(func, params) {
 		$('body').append(script);
 }
 
-
-
-
-
-
-
 let appendToPage = function(userPreferences) {
+
+
+
 
 /**
 * Add the inSum logo
 * @function addInsumLogo
 */
 
-	function addInsumLogo() {
+function addInsumLogo() {
 
-		let $insumButton = $('.a-Header-col.a-Header-col--right').append('<button type="button" id="in-logo" class="a-Button a-Button--noLabel a-Button--iconTextButton a-Button--noUI a-Button--navLink js-menuButton a-Button--accountMenu"><image style="height:20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAYAAAAKsfL4AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4QccEzoIjDEd0gAAA31JREFUeNrt2k9Ik3Ecx/HvM5zS3HRbGraJMkk2u8hKghFeDOZFOgRSgvTnogieFLKDHQIPJiRdTShP7WYQIbiDQQOhKMkSbcscyHwwN9l0+swp7telDbPI+Tz792yf983B8/js99pvz/P8nnErYR971PuQxDQx8ZwjJCkFhgAAAEAAAAACAAAQAACAAAAABAAAoMzEMcYwCpgBAEAAAAACAABQhisqxDfNC34Wje3T3uE+8RF/4nV9cRlpizWJv01qY9p/dFAUPhAoEA2KuhlI5gDTvf//tRkNDX8Oega8u2v0IbBA5pjztLtgRERuhZ1u1rZSndpIZcrSx2dLtA9SdiO2Evaxya+3RG3cb3OdOEDenbW07v8otE/4yfiIn+ZDHmLBsbR+csvP9dFlXQNZ9RauYL+C4oP+JeQhHz+U0f+9tTFKMxtEHsMga668RAZVJVcwAG/W3rH3gQXSCo6sH4uPHyIHT+RW2Nm9uutkq2zk8hKAF/zM5Z9LfNK1OXZ85piTZpedNMV3sJ769qRnRFGuf8UshL6zFyuvxZxAs5JWcJBj3kFdTdOkUarkfR/w7GMrm13ulc3g/3EBMfeE8YKfyRpAzpljTnLM36CTEACQ5k5CAECGEDajoWEAZLGn314OhA8EAORaAMjg5ekU72IAyPJdc14sRaQqTtf912vpXsQrOIBqwyBVlOioTm0komSWuDsTS+jrkQCtCuspXejz7qyxo8eQVwBuhZ2uVV2hGlUVVZ2pEP08QaNUkUap4kxqI9mokcKGZhr/MclSMTte+d5Sn6Uzv2YAp+umO6a2lD4oOQ7SZ+nklrausqnF25L2xYJjtBltG44fq2wB4g9ELmhquGQWvVJRQ7mJq26appHFCSZlKXx1d31A1gBdTdMZG/R/zYb7F+9yI4skGuFTcImseou8LkPdCju1mMep3+bK2uAfR3Ar7KK239oYlc85wK2wU099O/VLfPaaDoSe+naacYtbKo8v0OU0QIt5POcG/mhWvYWb+f3LidO2tO3N/RlgzeHBl1rkcA93wtnME16V10k4X8MMyFLB6DZmQCoKqTpEbacVHKQVHACQWq36vKTtASAxU6kRAHIOAAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAJLQL4pcMzh4pdIjAAAAAElFTkSuQmCC"><image></button>');
+	let $insumButton = $('.a-Header-col.a-Header-col--right').append('<button type="button" id="in-logo" class="a-Button a-Button--noLabel a-Button--iconTextButton a-Button--noUI a-Button--navLink js-menuButton a-Button--accountMenu"><image style="height:20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAYAAAAKsfL4AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4QccEzoIjDEd0gAAA31JREFUeNrt2k9Ik3Ecx/HvM5zS3HRbGraJMkk2u8hKghFeDOZFOgRSgvTnogieFLKDHQIPJiRdTShP7WYQIbiDQQOhKMkSbcscyHwwN9l0+swp7telDbPI+Tz792yf983B8/js99pvz/P8nnErYR971PuQxDQx8ZwjJCkFhgAAAEAAAAACAAAQAACAAAAABAAAoMzEMcYwCpgBAEAAAAACAABQhisqxDfNC34Wje3T3uE+8RF/4nV9cRlpizWJv01qY9p/dFAUPhAoEA2KuhlI5gDTvf//tRkNDX8Oega8u2v0IbBA5pjztLtgRERuhZ1u1rZSndpIZcrSx2dLtA9SdiO2Evaxya+3RG3cb3OdOEDenbW07v8otE/4yfiIn+ZDHmLBsbR+csvP9dFlXQNZ9RauYL+C4oP+JeQhHz+U0f+9tTFKMxtEHsMga668RAZVJVcwAG/W3rH3gQXSCo6sH4uPHyIHT+RW2Nm9uutkq2zk8hKAF/zM5Z9LfNK1OXZ85piTZpedNMV3sJ769qRnRFGuf8UshL6zFyuvxZxAs5JWcJBj3kFdTdOkUarkfR/w7GMrm13ulc3g/3EBMfeE8YKfyRpAzpljTnLM36CTEACQ5k5CAECGEDajoWEAZLGn314OhA8EAORaAMjg5ekU72IAyPJdc14sRaQqTtf912vpXsQrOIBqwyBVlOioTm0komSWuDsTS+jrkQCtCuspXejz7qyxo8eQVwBuhZ2uVV2hGlUVVZ2pEP08QaNUkUap4kxqI9mokcKGZhr/MclSMTte+d5Sn6Uzv2YAp+umO6a2lD4oOQ7SZ+nklrausqnF25L2xYJjtBltG44fq2wB4g9ELmhquGQWvVJRQ7mJq26appHFCSZlKXx1d31A1gBdTdMZG/R/zYb7F+9yI4skGuFTcImseou8LkPdCju1mMep3+bK2uAfR3Ar7KK239oYlc85wK2wU099O/VLfPaaDoSe+naacYtbKo8v0OU0QIt5POcG/mhWvYWb+f3LidO2tO3N/RlgzeHBl1rkcA93wtnME16V10k4X8MMyFLB6DZmQCoKqTpEbacVHKQVHACQWq36vKTtASAxU6kRAHIOAAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAJLQL4pcMzh4pdIjAAAAAElFTkSuQmCC"><image></button>');
 
 
-		$('body').append('<div id="INSUM_button_menu" class="a-Menu" style="position: absolute; top: 39px; right:20px; display: none;" tabindex="-1" role="menu">	  <div class="a-Menu-content"><ul id="INSUM_button_menu_ul"></ul></div></div>');
+	$('body').append('<div id="INSUM_button_menu" class="a-Menu" style="position: absolute; top: 39px; right:20px; display: none;" tabindex="-1" role="menu">	  <div class="a-Menu-content"><ul id="INSUM_button_menu_ul"></ul></div></div>');
 
-		//console.log($insumButton);
+	//console.log($insumButton);
 
-		let isInClick = false;
-		$('#in-logo').on('click.inClick', function(e) {
-			// e.preventDefault();
-			// console.log('Insum logo clicked');
-			$("#INSUM_button_menu").toggle();
-			isInClick = true;
-		});
+	let isInClick = false;
+	$('#in-logo').on('click.inClick', function(e) {
+		// e.preventDefault();
+		// console.log('Insum logo clicked');
+		$("#INSUM_button_menu").toggle();
+		isInClick = true;
+	});
 
-		$('body').on('click.inClick', function(e) {
-			if(!isInClick) {
-				$('#INSUM_button_menu').hide();
-			}
-			isInClick = false;
-		});
-		window.INSUMCOUNTER = window.INSUMCOUNTER || 1;
+	$('body').on('click.inClick', function(e) {
+		if(!isInClick) {
+			$('#INSUM_button_menu').hide();
+		}
+		isInClick = false;
+	});
+	window.INSUMCOUNTER = window.INSUMCOUNTER || 1;
 
-		$('#INSUM_button_menu').on('click',function(e) {
-			e.stopPropagation();
-		});
-	}
+	$('#INSUM_button_menu').on('click',function(e) {
+		e.stopPropagation();
+	});
+}
 
 /**
  * @callback toggleChangeCallback
@@ -119,6 +114,22 @@ window.setSwitchSelectionBackground = function setSwitchSelectionBackground(me) 
 addInsumLogo();
 
 
+//IAPPrefs stands for Insum-Apex-Pro Preferences
+(function( IAPPrefs ) {
+
+		IAPPrefs.setPreference =  function(cname, cvalue) {
+			userPreferences[cname] = cvalue;
+			var message = {isInsumApexProMessage: true, keyval: {'key': cname, 'val': cvalue} };
+			window.postMessage(JSON.stringify(message), '*');
+		}
+
+
+		IAPPrefs.getPreference = function(name){
+				return userPreferences[name];
+		}
+
+}( window.IAPPrefs = window.IAPPrefs || {} ));
+
 //SAP stands for "show altered properties"
 (function(SAP) {
 		SAP.allData = null;
@@ -141,9 +152,9 @@ addInsumLogo();
 
 		$(document).ready(function(){
 				// alert('page is loading');
-				var filterCookie = getCookie('firstFilter');
+				var filterCookie = IAPPrefs.getPreference('firstFilter');
 				if (!filterCookie){
-						setCookie('firstFilter',0); // Checks to see if non defaults only has been toggled
+						IAPPrefs.setPreference('firstFilter',0); // Checks to see if non defaults only has been toggled
 						SAP.hideDefaultItems = false;
 						// alert('non default values are not exclusive by default.')
 				}else if (filterCookie == 1) {
@@ -156,12 +167,12 @@ addInsumLogo();
 					$('#pe_showNonDefaults').css('border','none');
 					SAP.hideDefaultItems = false;
 				}
-				var highlightCookie = getCookie('highlightToggle');
+				var highlightCookie = IAPPrefs.getPreference('highlightToggle');
 				// alert(highlightCookie);
 				if (highlightCookie ){
 						// alert('highlightCookie = false');
 						SAP.highlightNonDefaults = true;
-						setCookie('highlightToggle',1); // Checks to see if highlighting has been toggled
+						IAPPrefs.setPreference('highlightToggle',1); // Checks to see if highlighting has been toggled
 						$('#pe_toggleNonDefaults').css('background-color','#DEEFFB');
 						$('#pe_toggleNonDefaults').css('border','1px solid #B6DAF6');
 						// alert('highlightCookie set to true');
@@ -178,7 +189,7 @@ addInsumLogo();
 					$('#pe_toggleNonDefaults').css('background-color','#FFFFFF');
 					$('#pe_toggleNonDefaults').css('border','none');
 				}
-		});
+		}) ;
 
 
 		$('body').on('change','#go_to_page',
@@ -219,7 +230,7 @@ addInsumLogo();
 							if(SAP.hideDefaultItems ) {
 									$('#pe_showNonDefaults').css('background-color','#DEEFFB');
 									$('#pe_showNonDefaults').css('border','1px solid #B6DAF6');
-									setCookie('firstFilter',1);
+									IAPPrefs.setPreference('firstFilter',1);
 									SAP.currentNodes = $('#peComponentProperties [data-property-id]').toArray();
 
 
@@ -227,7 +238,7 @@ addInsumLogo();
 							}else {
 									$('#pe_showNonDefaults').css('background-color','#FFFFFF');
 									$('#pe_showNonDefaults').css('border','none');
-									setCookie('firstFilter',0);
+									IAPPrefs.setPreference('firstFilter',0);
 									hideOrShowItems($('#peComponentProperties [data-property-id]').toArray(), [])
 						 }
 			});
@@ -253,7 +264,7 @@ addInsumLogo();
 
 									updatePropertyNodes();
 									// alert('now highlighting non-default values');
-									setCookie('highlightToggle',1);
+									IAPPrefs.setPreference('highlightToggle',1);
 							}else{
 									$('#pe_toggleNonDefaults').css('background-color','#FFFFFF');
 									$('#pe_toggleNonDefaults').css('border','none');
@@ -262,12 +273,10 @@ addInsumLogo();
 									addOrRemoveHighlighting([], $('#peComponentProperties [data-property-id]').toArray());
 
 
-									setCookie('highlightToggle',0);
+									IAPPrefs.setPreference('highlightToggle',0);
 					}
 			});
 		}
-
-
 
 	/**
 	* @function deReferenceProps
@@ -567,6 +576,7 @@ addInsumLogo();
 	function updatePropertyNodes() {
 			getAllProperties();
 			compareFieldsToDefaults();
+			//addSelect2.convertSelectsToSelect2();
 	}
 
 	/**
@@ -769,13 +779,17 @@ addInsumLogo();
 
 })(window.SAP = window.SAP || {});
 
+
+
+
+
 	/**
 	* Make cursor persistent on selected property in property pane on page editor
 	* @function focusLastSelectedProperty
 	*/
 	function focusLastSelectedProperty(){
-		// Using GetCookie and SetCookie from builtin Apex functions
-		if(window.GetCookie("LastSeclectedPropCookie") == 1){
+		// Using getPreference and getPreference from builtin Apex functions
+		if(IAPPrefs.getPreference("LastSeclectedPropCookie") == 1){
 			// console.log('inside focusLastSelectedProperty');
 			// get curretly selected property id
 			var currentSelected = $(document.activeElement).data('property-id');
@@ -789,14 +803,21 @@ addInsumLogo();
 			});
 			// register focus on selectionChanged event
 			$(document).on('selectionChanged.focusOnPropAfterSelection', function(e, name, components){
-				$(`[data-property-id=${currentSelected}]`).focus();
+				if(currentSelected &&
+					$(`[data-property-id=${currentSelected}]`) &&
+					$(`[data-property-id=${currentSelected}]`).parent() &&
+					$(`[data-property-id=${currentSelected}]`).parent()[0]
+				) {
+					$(`[data-property-id=${currentSelected}]`).parents('.a-Property')[0].scrollIntoView();
+					$(`[data-property-id=${currentSelected}]`).focus();
+				}
 			})
 		}
-		if(window.GetCookie("LastSeclectedPropCookie") === null){
-			setCookie("LastSeclectedPropCookie", 1);
+		if(IAPPrefs.getPreference("LastSeclectedPropCookie") === null){
+			IAPPrefs.setPreference("LastSeclectedPropCookie", 1);
 			focusLastSelectedProperty();
 		}
-		if(window.GetCookie("LastSeclectedPropCookie") == 0){
+		if(IAPPrefs.getPreference("LastSeclectedPropCookie") == 0){
 			$(document).off("click.updateCurrentSelection");
 			$(document).off("selectionChanged.focusOnPropAfterSelection");
 		}
@@ -805,8 +826,8 @@ addInsumLogo();
 	focusLastSelectedProperty();
 
 	// Add focusLastSelectedProperty selection to IN menu
-	addOptionToINMenu(label="Focus Last Propery Selected", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("LastSeclectedPropCookie"), callback=function(object, object_value, id){
-		setCookie("LastSeclectedPropCookie", object_value);
+	addOptionToINMenu(label="Focus Last Propery Selected", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=IAPPrefs.getPreference("LastSeclectedPropCookie"), callback=function(object, object_value, id){
+		IAPPrefs.setPreference("LastSeclectedPropCookie", object_value);
 		focusLastSelectedProperty();
 		$(document).trigger("click.updateCurrentSelection");
 	});
@@ -819,7 +840,7 @@ addInsumLogo();
 	*/
 	function persistentFocusProperties(textToFilter){
 		// console.log("inside persistentFocusProperties");
-		if(window.GetCookie("PersistentFocusCookie") == 1){
+		if(IAPPrefs.getPreference("PersistentFocusCookie") == 1){
 			$(document).on('selectionChanged.PersistentFocus_1', function(e, name, component){
 				// set current value in filter
 				// TODO remove dependency on currentFilter
@@ -839,11 +860,11 @@ addInsumLogo();
 				}
 			});
 		}
-		if(window.GetCookie("PersistentFocusCookie") === null){
-			setCookie("PersistentFocusCookie", 1);
+		if(IAPPrefs.getPreference("PersistentFocusCookie") === null){
+			IAPPrefs.setPreference("PersistentFocusCookie", 1);
 			persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 		}
-		if(window.GetCookie("PersistentFocusCookie") == 0){
+		if(IAPPrefs.getPreference("PersistentFocusCookie") == 0){
 			$(document).off("selectionChanged.PersistentFocus_1");
 			$(document).off("selectionChanged.PersistentFocus_2");
 		}
@@ -852,8 +873,8 @@ addInsumLogo();
 	persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 
 	// Add persistentFocusProperties selection to IN menu
-	addOptionToINMenu(label="Persistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=window.GetCookie("PersistentFocusCookie"), callback=function(object, object_value, id){
-		setCookie("PersistentFocusCookie", object_value);
+	addOptionToINMenu(label="Persistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=IAPPrefs.getPreference("PersistentFocusCookie"), callback=function(object, object_value, id){
+		IAPPrefs.setPreference("PersistentFocusCookie", object_value);
 		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
 		$(document).trigger("selectionChanged.PersistentFocus_1");
 	});
@@ -928,34 +949,16 @@ addInsumLogo();
 	}
 
 
-	/**
-	* @function setCookie
-	* @param {} cname
-	* @param {} cvalue
-	* TODO: Change the name of setCookie everywhere in this document.
-	*/
-	function setCookie(cname, cvalue) {
-		userPreferences[cname] = cvalue;
-		var message = {isInsumApexProMessage: true, keyval: {'key': cname, 'val': cvalue} };
-		window.postMessage(JSON.stringify(message), '*');
-	}
 
-	/**
-	* @function getCookie
-	* @param {} name
-	*/
-	function getCookie(name){
-			return userPreferences[name];
-	}
 
 }
 
-
+///
 //Get User Preferences
 chrome.storage.sync.get("allKeys", function(allKeys) {
 	allKeys = allKeys.allKeys;
 	chrome.storage.sync.get(allKeys, function (allKeyValuesObj) {
-	    console.log('allKeyValuesObj', allKeyValuesObj);
+			//console.log('allKeyValuesObj', allKeyValuesObj);
 
 			var userPreferences = {};
 
@@ -971,7 +974,7 @@ chrome.storage.sync.get("allKeys", function(allKeys) {
 });
 
 window.addEventListener("message", function(e) {
-	console.log('Got message ', e.data);
+	//console.log('Got message ', e.data);
 	try {
 		let data = JSON.parse(e.data);
 		if(data.isInsumApexProMessage) {
@@ -984,7 +987,7 @@ window.addEventListener("message", function(e) {
 					}
 					allKeys = allKeys.allKeys;
 					allKeys[key] = val;
-					console.log('setting allkeys to: ', allKeys );
+					//console.log('setting allkeys to: ', allKeys );
 					chrome.storage.sync.set({'allKeys': allKeys});
 				});
 
