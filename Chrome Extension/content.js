@@ -1,6 +1,8 @@
 /*jshint esversion: 6*/
 
-console.log('Running Insum-Apex-Pro');
+console.log('Thank you for using Insum-Apex-Pro!\nHave a question or request?\nContact Ben Shumway at bshumway@insum.ca\nCheers');
+
+
 
 /**
 * @function append
@@ -185,8 +187,8 @@ addInsumLogo();
 
 				}else{
 					// alert('highlightCookie = 0');
-					SAP.highlightNonDefaults = false;
-					$('#pe_toggleNonDefaults').css('background-color','#FFFFFF');
+					SAP.highlightNonDefaults = true;
+					$('#pe_toggleNonDefaults').css('background-color','#DEEFFB');
 					$('#pe_toggleNonDefaults').css('border','none');
 				}
 		}) ;
@@ -777,7 +779,11 @@ addInsumLogo();
 
 
 
+
 })(window.SAP = window.SAP || {});
+
+
+
 
 
 
@@ -948,9 +954,6 @@ addInsumLogo();
 		})
 	}
 
-
-
-
 }
 
 ///
@@ -972,6 +975,53 @@ chrome.storage.sync.get("allKeys", function(allKeys) {
 
 
 });
+
+
+//IAPSelect2 - INSUM-APEX-PRO Select2
+(function( IAPSelect2) {
+
+	createMutationObserver();
+
+	function createMutationObserver() {
+			let target = $('body')[0];
+			let observer = new MutationObserver(function(mutations) {
+					for (var i = 0; i < mutations.length; i++) {
+						if (mutations[i].addedNodes.length) {
+							//console.log('got mutation', mutations[i]);
+							for (let j = 0; j < mutations[i].addedNodes.length; j++) {
+								var addedNode = mutations[i].addedNodes[j];
+								//console.log(addedNode);
+								$(addedNode).find('select').each(function() {
+									if($(this).find('option').length > 6) {
+										$(this).select2();
+										//Trigger the change event for the node so that Apex knows the value has changed
+										//TODO: Make sure it has an id, if it doesn't then we'll have to find it some other way.
+										$(this).on("select2:select", function (e) {
+											//console.log(this,'changed');
+											$(this).trigger('change');
+											append(function(idObj) {
+												$('#'+idObj.id).trigger('change');
+											}, {id: $(this)[0].id} );
+										});
+									}
+
+								});
+							}
+						}
+				}
+			});
+
+			let config = {
+					childList: true,
+					subtree: true
+			};
+			//console.log('observing', target);
+			observer.observe(target, config);
+	}
+
+
+}( window.IAPSelect2 = window.IAPSelect2 ));
+
 
 window.addEventListener("message", function(e) {
 	//console.log('Got message ', e.data);
