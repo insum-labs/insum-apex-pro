@@ -13,6 +13,8 @@
       "js": [
         "thirdParty/jquery-3.1.1.min.js",
         "thirdParty/select2.min.js",
+        "thirdParty/textarea-caret-position.js",
+        "loadBigVars.js",
         "content.js"
       ],
       "css": [
@@ -35,5 +37,5 @@
   ],
   "icons": {"128": "in_ronsard_crystal_bold_slightly_squeezed_white_background.png"},
   "update_url": "https://clients2.google.com/service/update2/crx",
-  "version": "1.6.0"
+  "version": "1.7.0"
 }

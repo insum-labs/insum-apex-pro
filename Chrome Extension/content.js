@@ -137,6 +137,7 @@ addInsumLogo();
 		SAP.allData = null;
 		let html = $('body').html();
 		SAP.version = html.match(/gApexVersion[\r\n\s\t]*=[\r\n\s\t]*"([^"]+)"/)[1];
+		SAP.version = parseFloat(SAP.version.substr(0,3));
 		SAP.language = html.match(/gLanguage[\r\n\s\t]*=[\r\n\s\t]*"([^")]+)"/)[1];
 		SAP.sessionId = $('[name="p_instance"]').val();
 		SAP.currentNodes = []; //currentNodes is the HTML nodes under consideration
@@ -844,46 +845,26 @@ addInsumLogo();
 	* properties stay consistent.
 	* @function persistentFocusProperties
 	*/
-	function persistentFocusProperties(textToFilter){
-		// console.log("inside persistentFocusProperties");
-		if(IAPPrefs.getPreference("PersistentFocusCookie") == 1){
-			$(document).on('selectionChanged.PersistentFocus_1', function(e, name, component){
+	function persistentFocusProperties(){
+
+			$(document).on('selectionChanged', function(e, name, component){
+				var $filterInput = $("#pe > div.a-PropertyEditor-filter > input");
+				$filterInput.val(window.textToFilter || "");
+				$filterInput.trigger('keyup', {keyCode:13} );
+
 				// set current value in filter
 				// TODO remove dependency on currentFilter
 				var currentFilter = $("#pe > div.a-PropertyEditor-filter > input").val();
 				$("#pe > div.a-PropertyEditor-filter > input").on('keyup', function(){
-						currentFilter = $(this).val();
-						textToFilter = currentFilter;
-						// console.log(currentFilter);
+						window.textToFilter = $(this).val();
 					});
-
 			});
-
-			$(document).on('selectionChanged.PersistentFocus_2', function(e, name, component){
-				if(textToFilter != undefined || textToFilter != ""){
-					$("#pe > div.a-PropertyEditor-filter > input").val(textToFilter);
-					$("#pe > div.a-PropertyEditor-filter > input").trigger('keyup', {keyCode: 13});
-				}
-			});
-		}
-		if(IAPPrefs.getPreference("PersistentFocusCookie") === null){
-			IAPPrefs.setPreference("PersistentFocusCookie", 1);
-			persistentFocusProperties(window.textToFilter = window.textToFilter || "");
-		}
-		if(IAPPrefs.getPreference("PersistentFocusCookie") == 0){
-			$(document).off("selectionChanged.PersistentFocus_1");
-			$(document).off("selectionChanged.PersistentFocus_2");
-		}
 	}
 
-	persistentFocusProperties(window.textToFilter = window.textToFilter || "");
+	if(SAP.version < 5.3) {
+		persistentFocusProperties();
+	}
 
-	// Add persistentFocusProperties selection to IN menu
-	addOptionToINMenu(label="Persistent Filter Properties", on_label="Enable", off_label="Disable", on_value=1, off_value=0, default_value=IAPPrefs.getPreference("PersistentFocusCookie"), callback=function(object, object_value, id){
-		IAPPrefs.setPreference("PersistentFocusCookie", object_value);
-		persistentFocusProperties(window.textToFilter = window.textToFilter || "");
-		$(document).trigger("selectionChanged.PersistentFocus_1");
-	});
 
 
 	/**
@@ -954,6 +935,371 @@ addInsumLogo();
 		})
 	}
 
+
+//IAPSnippets - INSUM-APEX-PRO Snippets
+(function( IAPSnippets) {
+	createMutationObserver();
+
+	IAPSnippets.editor = {};
+
+	$('body').on('dialogclose', function() {
+		destroyDecorationAndSnippet();
+	});
+
+	function createMutationObserver() {
+			let target = $('body')[0];
+			let observer = new MutationObserver(function(mutations) {
+					for (var i = 0; i < mutations.length; i++) {
+						if (mutations[i].addedNodes.length) {
+							//console.log('got mutation', mutations[i]);
+							for (let j = 0; j < mutations[i].addedNodes.length; j++) {
+								var addedNode = mutations[i].addedNodes[j];
+								//console.log(addedNode);
+								//
+								//
+								$(addedNode).find('.ui-dialog-title').each(function() {
+									//console.log('found ui-dialog-title', $(this).text());
+									let text = $(this).text().trim();
+									if(text == 'Code Editor - PL/SQL Code') {
+										//console.log('Detected - Opened Pl/SQL Editor!');
+										addSnippetListeners();
+
+										//Break out of the loop by returning false;
+										return false;
+									}
+								});
+							}
+						}
+				}
+			});
+
+			let config = {
+					childList: true,
+					subtree: true
+			};
+			//console.log('observing', target);
+			observer.observe(target, config);
+	}
+
+
+	function addSnippetListeners() {
+		IAPSnippets.editor = $('.CodeMirror')[0].CodeMirror;
+		IAPSnippets.editor.on('keyup', function(cm,e) {
+
+			if(e.keyCode >= 38 && e.keyCode <= 40 || e.keyCode == 13) { //Ignore arrow keys
+				return;
+			}
+
+			let suggestions = getSuggestions();
+			if(!suggestions) {
+				suggestions = [];
+			}
+			//if(suggestions && suggestions.length) {
+
+			let cursor = IAPSnippets.editor.getCursor();
+			let line = IAPSnippets.editor.getLine(cursor.line)
+	    let start = cursor.ch;
+			let end = cursor.ch;
+	    while (start && /\w/.test(line.charAt(start - 1))) --start;
+	    while (end < line.length && /\w/.test(line.charAt(end))) ++end;
+
+			var options = {
+				hint: function() {
+					return {
+						from: CodeMirror.Pos(cursor.line, start),
+							to: CodeMirror.Pos(cursor.line, end),
+						list: suggestions,
+					}
+				},
+				completeSingle: false,
+				alignWithWord: false
+			};
+			IAPSnippets.editor.showHint(options);
+				//}
+		});
+
+		//Text decorations!
+		IAPSnippets.editor.on('cursorActivity', function() {
+			setTimeout(handleOverlayDecoration, 100);
+		});
+
+		IAPSnippets.editor.on('refresh', function() {
+			destroyDecorationAndSnippet();
+		});
+
+
+
+	}
+
+  function getSuggestions() {
+		//console.log('inside getSuggestions');
+		let allSuggestions = [];
+		let doc = IAPSnippets.editor.doc
+		let cursor = doc.getCursor();
+		let currLine = cursor.line;
+		let currCol = cursor.ch;
+
+		var lineText = doc.getRange({line: currLine, ch: 0}, {line: currLine, ch: currCol});
+
+		let lineWords = lineText.match(/[\w]+|\.|;|\(|\)/g);
+
+	  if(!lineWords) {
+	    return null;
+	  }
+
+		let wordMaxIndex = lineWords.length-1;
+
+		//At least 2 words if The previous word is `.`
+		//At least 1 word if the current word is `.`
+		if ((lineWords[wordMaxIndex-1] == '.' && wordMaxIndex >= 2) ||
+		    (lineWords[wordMaxIndex] == '.' ) && wordMaxIndex >= 1 ) {
+
+				//convert to upper as that's how they're referenced in dataStore.json
+				let prevWord = lineWords[wordMaxIndex] == '.' ? lineWords[wordMaxIndex-1] : lineWords[wordMaxIndex-2]
+
+				let doesPackageExist = packageExists(prevWord.toUpperCase());
+
+				//only get function list if there is an exact match of 1 to the prev token
+				if (doesPackageExist){
+
+						let packageObj = IAPSnippets.dbDataStore.packages[prevWord.toUpperCase()];
+
+						let procedures = packageObj.procedures;
+						for (proc of procedures){
+							  if(stringStartsWith(proc, lineWords[wordMaxIndex]) ||
+									 lineWords[wordMaxIndex] == '.') {
+									allSuggestions.push(proc);
+								}
+						}
+
+						let identifiers = packageObj.identifiers;
+						for (ident of identifiers){
+							if(stringStartsWith(ident, lineWords[wordMaxIndex]) ||
+								 lineWords[wordMaxIndex] == '.') {
+								allSuggestions.push(ident);
+							}
+						}
+				}
+		}
+		else if(lineWords[wordMaxIndex].length >= 2) {
+				for (let keyword of IAPSnippets.dbDataStore.keywords){
+						if (stringStartsWith(keyword, lineWords[wordMaxIndex])){
+								//allSuggestions.push(IAPSnippets.getKeywordSuggestion(keyword, suggestInfo.prefix));
+								allSuggestions.push(keyword);
+						}
+				}
+
+				for (pkg in IAPSnippets.dbDataStore.packages){
+						if (stringStartsWith(pkg, lineWords[wordMaxIndex])){
+								allSuggestions.push(pkg);
+						}
+				}
+		} else {
+			return null;
+		}
+
+		if(allSuggestions.length == 1 &&
+			lineWords[wordMaxIndex].toUpperCase() == allSuggestions[0].toUpperCase()) {
+			allSuggestions = [];
+		}
+
+		let isLowerCase = lineWords[wordMaxIndex].charAt(0).match(/[a-z]/) || lineWords[wordMaxIndex] == '.';
+		if(isLowerCase) {
+			for(let i = 0; i < allSuggestions.length; i++) {
+				allSuggestions[i] = allSuggestions[i].toLowerCase();
+			}
+		}
+
+		return allSuggestions;
+	}
+
+	function handleOverlayDecoration() {
+
+		// first check to see if we are inside of a function,
+		// if so get the linetext of the line corresponding to the opening parenthesis
+		let cursorIsInsideOfParetheses;
+
+
+		let doc = IAPSnippets.editor.doc;
+
+		let cursor = doc.getCursor();
+		let currLine = cursor.line;
+		let currCol = cursor.ch;
+
+		var lineText = doc.getRange({line: currLine, ch: 0}, {line: currLine, ch: currCol});
+
+		//console.log(lineText);
+		let fullLastWord = getWordUnderCursor();
+
+
+		if(fullLastWord) {
+			//console.log(fullLastWord);
+			fullLastWord = fullLastWord.match(/\w+/);
+			if(fullLastWord && fullLastWord.length) {
+				fullLastWord = fullLastWord[0];
+			}
+			 else {
+				fullLastWord = null;
+			}
+		}
+
+
+		let lineWords = lineText.match(/[\w]+|\./g);
+		if(!lineWords || !lineWords.length) {
+			destroyDecorationAndSnippet();
+			return;
+		}
+
+		if(lineWords.length < 3) {
+			destroyDecorationAndSnippet();
+			return;
+		}
+
+		let wordMaxIndex = lineWords.length-1;
+		if(fullLastWord) {
+			lineWords[wordMaxIndex] = fullLastWord;
+		}
+
+		let packageName;
+		let procName;
+		let snippet;
+
+		//console.log(lineWords);
+		if(lineWords[wordMaxIndex -1] != '.') {
+			destroyDecorationAndSnippet();
+			return;
+		} else {
+			packageName = lineWords[wordMaxIndex-2].toUpperCase();
+			procName = lineWords[wordMaxIndex].toUpperCase();
+		}
+
+		//console.log('lineWord', lineWords, 'packageName', packageName,'procName',procName);
+
+		if(IAPSnippets.docDataStore[packageName] && IAPSnippets.docDataStore[packageName][procName]) {
+			snippet = IAPSnippets.docDataStore[packageName][procName];
+			//console.log(snippet);
+		} else {
+			destroyDecorationAndSnippet();
+			return;
+		}
+
+		//console.log('Found Snippet Match!');
+		let container = document.createElement('div');
+		let pre = document.createElement('pre');
+		pre.classList.add('overlay');
+		pre.innerHTML = snippet.bodyFullText;
+		pre.innerHTML += snippet.url ? '<br /><a href = ' + snippet.url + ' target="_blank">more..</a>' : '';
+
+		container.appendChild(pre);
+
+		$(container).on('click', expandSnippet);
+
+		//create a decoration marker. A Decoration marker object is returned which can be updated
+		destroyDecorationAndSnippet();
+
+		IAPSnippets.decoration = container;
+		createDecorationMarker();
+		IAPSnippets.snippet = snippet;
+		//console.log('set decoration', IAPSnippets.decoration);
+
+	}
+
+	function createDecorationMarker(){
+		let container = IAPSnippets.decoration;
+		let textarea = $('#editorDlg-codeEditor textarea')[0];
+		let coordinates = getCaretCoordinates(textarea, textarea.selectionEnd);
+		let posTopLeft = $('#editorDlg-codeEditor textarea').offset();
+		posTopLeft.top += coordinates.top;
+		posTopLeft.left += coordinates.left;
+		$(container).css('top', posTopLeft.top);
+		$(container).css('left', posTopLeft.left);
+		$(container).css('position', 'absolute');
+		$(container).css('z-index', '9001');
+		$(container).css('background-color', 'lightblue');
+		$(container).css('display', 'inline');
+		$(container).css('font-size', '10px');
+
+
+		$('body').append(container);
+	}
+
+	function destroyDecorationAndSnippet() {
+		$(IAPSnippets.decoration).remove();
+		IAPSnippets.snippet = null;
+	}
+
+	function expandSnippet() {
+		//console.log('Arrived in expandSnippet');
+		if(IAPSnippets.snippet) {
+			let body = IAPSnippets.snippet.bodyNoDefault;
+			body = body.trim();
+			if(!body) {
+				return;
+			} else {
+
+				//Get all whitespace before the first word, so we can maintain the proper indentation
+				let doc = IAPSnippets.editor.doc;
+				let cursor = doc.getCursor();
+				let currLine = cursor.line;
+				let currCol = cursor.ch;
+				var lineText = doc.getLine(currLine);
+
+				let lineTextLength = lineText.length;
+				IAPSnippets.editor.setCursor( {line: currLine, ch:lineTextLength } );
+
+				let startOfChopping = lineText.regexIndexOf(/[^a-zA-Z\.1-9]*$/);
+
+				doc.setSelection({line:currLine,ch:startOfChopping},{line:currLine,ch:lineTextLength});
+
+				doc.replaceSelection('');
+
+
+
+				indentation = lineText.match(/^[\t\s]*/)[0];
+
+				body = body.replace(/\n/g, '\n' + indentation);
+
+				body = body.replace(/(\w+)\s*\=>\s*\$\d+/g, '$1 => $1');
+				body = indentation + '  ' + body;
+				doc.replaceSelection('(\n' +
+															 '\t' + body +
+														 ' );');
+			}
+		}
+	}
+
+	function getWordUnderCursor() {
+		let word = IAPSnippets.editor.findWordAt(IAPSnippets.editor.getCursor());
+		return IAPSnippets.editor.getRange(word.anchor, word.head);
+	}
+
+	function packageExists(prefix){
+		for (pkg in IAPSnippets.dbDataStore.packages){
+				if (pkg.toUpperCase() === prefix.toUpperCase()){
+						return true;
+				}
+		}
+		return false;
+	}
+
+	function stringStartsWith(str, testStr){
+		if (!testStr){
+				return false;
+		}
+		let compare1 = str.slice(0, testStr.length);
+		let compare2 = testStr.toUpperCase();
+
+		return compare1 == compare2;
+	}
+
+	String.prototype.regexIndexOf = function(regex, startpos) {
+	    var indexOf = this.substring(startpos || 0).search(regex);
+	    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
+	}
+
+	}( window.IAPSnippets = window.IAPSnippets || {}));
+
+
 }
 
 ///
@@ -1020,7 +1366,9 @@ chrome.storage.sync.get("allKeys", function(allKeys) {
 	}
 
 
-}( window.IAPSelect2 = window.IAPSelect2 ));
+}( window.IAPSelect2 = window.IAPSelect2 || {} ));
+
+
 
 
 window.addEventListener("message", function(e) {
