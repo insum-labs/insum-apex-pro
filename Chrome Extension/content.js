@@ -1030,7 +1030,10 @@ addInsumLogo();
 
 		//Text decorations!
 		IAPSnippets.editor.on('cursorActivity', function() {
-			setTimeout(handleOverlayDecoration, 200);
+			//We set a timeout to wait for the cursor to update its position
+			//This is a weak solution, but there doesn't seem to be anything the framework
+			//that let's us know when the cursor's position is updated.
+			setTimeout(handleOverlayDecoration, 100);
 		});
 
 		IAPSnippets.editor.on('refresh', function() {
@@ -1389,6 +1392,7 @@ chrome.storage.sync.get("allKeys", function(allKeys) {
 								//console.log(addedNode);
 								$(addedNode).find('select').each(function() {
 									if($(this).find('option').length > 6) {
+										let id = $(this).prop('id');
 										$(this).select2();
 										//Trigger the change event for the node so that Apex knows the value has changed
 										//TODO: Make sure it has an id, if it doesn't then we'll have to find it some other way.
@@ -1397,10 +1401,14 @@ chrome.storage.sync.get("allKeys", function(allKeys) {
 											$(this).trigger('change');
 											append(function(idObj) {
 												$('#'+idObj.id).trigger('change');
-											}, {id: $(this)[0].id} );
+											}, {id: id} );
+										});
+
+										//Listen for changes via "quick pick"
+										$('#' + id + '_quickPickBtn_menu').on('click', function() {
+											$('#' + id).trigger('change.select2');
 										});
 									}
-
 								});
 							}
 						}
