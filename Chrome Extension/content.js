@@ -1,6 +1,6 @@
 /*jshint esversion: 6*/
 
-console.log('Thank you for using Insum-Apex-Pro!\nHave a question or request?\nContact Ben Shumway at bshumway@insum.ca\nCheers');
+console.log('Thank you for using Insum-Apex-Pro!\nGithub: https://github.com/insum-labs/insum-apex-pro\nWho We Are:https://www.insum.ca');
 
 
 
@@ -890,7 +890,9 @@ addInsumLogo();
 					row and values.
 		 */
 		 $(document).on("selectionChanged.pageItemsToSubmit", function(e, name, component) {
+			 //console.log('registered selectionChanged');
 		   $.each($("[id^=pe_][id$=lovBtn]"), function() {
+
 		     $(this).on('click.pageItemsToSubmit', function() {
 					 // this function is defined after this funtion
 					 autoSearchPagePopupLov();
@@ -934,6 +936,8 @@ addInsumLogo();
 			$("#lovDlg_search_button").trigger('click');
 		})
 	}
+
+
 
 
 //IAPSnippets - INSUM-APEX-PRO Snippets
@@ -1097,7 +1101,7 @@ addInsumLogo();
 				//Sometimes a procedure is in docDataStore but not in dbDataStore
 				if(IAPSnippets.docDataStore[prevWord]) {
 					procedures = Object.keys(IAPSnippets.docDataStore[prevWord]);
-					console.log('procedures', procedures);
+					//console.log('procedures', procedures);
 					for(let i = 0; i < procedures.length; i++) {
 						if((stringStartsWith(procedures[i], lineWords[wordMaxIndex])  ||
 							  lineWords[wordMaxIndex] == '.') &&
@@ -1123,7 +1127,7 @@ addInsumLogo();
 
 				//Sometimes a package is in docDataStore but not in dbDataStore
 				let packages = Object.keys(IAPSnippets.docDataStore);
-				console.log('packages', packages);
+				//console.log('packages', packages);
 				for(let i = 0; i < packages.length; i++) {
 					if(stringStartsWith(packages[i], lineWords[wordMaxIndex]) &&
 						 allSuggestions.indexOf(packages[i]) == -1) {
