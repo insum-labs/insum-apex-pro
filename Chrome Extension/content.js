@@ -986,7 +986,17 @@ addInsumLogo();
 		IAPSnippets.editor = $('.CodeMirror')[0].CodeMirror;
 		IAPSnippets.editor.on('keyup', function(cm,e) {
 
-			if(e.keyCode >= 38 && e.keyCode <= 40 || e.keyCode == 13) { //Ignore arrow keys
+			if(e.keyCode >= 38 && e.keyCode <= 40) { //Ignore arrow keys
+				return;
+			}
+
+			if(e.keyCode == 13 && IAPSnippets.snippet) {
+				undoNewLine();
+				expandSnippet();
+				e.stopPropagation();
+				e.preventDefault();
+				return;
+			} else if (e.keyCode == 13) {
 				return;
 			}
 
@@ -1020,7 +1030,7 @@ addInsumLogo();
 
 		//Text decorations!
 		IAPSnippets.editor.on('cursorActivity', function() {
-			setTimeout(handleOverlayDecoration, 100);
+			setTimeout(handleOverlayDecoration, 200);
 		});
 
 		IAPSnippets.editor.on('refresh', function() {
@@ -1056,13 +1066,13 @@ addInsumLogo();
 
 				//convert to upper as that's how they're referenced in dataStore.json
 				let prevWord = lineWords[wordMaxIndex] == '.' ? lineWords[wordMaxIndex-1] : lineWords[wordMaxIndex-2]
-
-				let doesPackageExist = packageExists(prevWord.toUpperCase());
+				prevWord = prevWord.toUpperCase();
+				let doesPackageExist = packageExists(prevWord);
 
 				//only get function list if there is an exact match of 1 to the prev token
 				if (doesPackageExist){
 
-						let packageObj = IAPSnippets.dbDataStore.packages[prevWord.toUpperCase()];
+						let packageObj = IAPSnippets.dbDataStore.packages[prevWord];
 
 						let procedures = packageObj.procedures;
 						for (proc of procedures){
@@ -1080,6 +1090,19 @@ addInsumLogo();
 							}
 						}
 				}
+
+				//Sometimes a procedure is in docDataStore but not in dbDataStore
+				if(IAPSnippets.docDataStore[prevWord]) {
+					procedures = Object.keys(IAPSnippets.docDataStore[prevWord]);
+					console.log('procedures', procedures);
+					for(let i = 0; i < procedures.length; i++) {
+						if((stringStartsWith(procedures[i], lineWords[wordMaxIndex])  ||
+							  lineWords[wordMaxIndex] == '.') &&
+							  allSuggestions.indexOf(procedures[i]) == -1) {
+							allSuggestions.push(procedures[i]);
+						}
+					}
+				}
 		}
 		else if(lineWords[wordMaxIndex].length >= 2) {
 				for (let keyword of IAPSnippets.dbDataStore.keywords){
@@ -1094,6 +1117,17 @@ addInsumLogo();
 								allSuggestions.push(pkg);
 						}
 				}
+
+				//Sometimes a package is in docDataStore but not in dbDataStore
+				let packages = Object.keys(IAPSnippets.docDataStore);
+				console.log('packages', packages);
+				for(let i = 0; i < packages.length; i++) {
+					if(stringStartsWith(packages[i], lineWords[wordMaxIndex]) &&
+						 allSuggestions.indexOf(packages[i]) == -1) {
+						allSuggestions.push(packages[i]);
+					}
+				}
+
 		} else {
 			return null;
 		}
@@ -1194,7 +1228,6 @@ addInsumLogo();
 
 		$(container).on('click', expandSnippet);
 
-		//create a decoration marker. A Decoration marker object is returned which can be updated
 		destroyDecorationAndSnippet();
 
 		IAPSnippets.decoration = container;
@@ -1209,16 +1242,15 @@ addInsumLogo();
 		let textarea = $('#editorDlg-codeEditor textarea')[0];
 		let coordinates = getCaretCoordinates(textarea, textarea.selectionEnd);
 		let posTopLeft = $('#editorDlg-codeEditor textarea').offset();
-		posTopLeft.top += coordinates.top;
+		posTopLeft.top += coordinates.top+12;
 		posTopLeft.left += coordinates.left;
 		$(container).css('top', posTopLeft.top);
 		$(container).css('left', posTopLeft.left);
 		$(container).css('position', 'absolute');
 		$(container).css('z-index', '9001');
 		$(container).css('background-color', 'lightblue');
-		$(container).css('display', 'inline');
 		$(container).css('font-size', '10px');
-
+		$(container).find('pre').css('display', 'inline');
 
 		$('body').append(container);
 	}
@@ -1264,8 +1296,26 @@ addInsumLogo();
 				doc.replaceSelection('(\n' +
 															 '\t' + body +
 														 ' );');
+				destroyDecorationAndSnippet();
 			}
 		}
+	}
+
+	//Undo's the new line that's created when the user hits the enter key
+	function undoNewLine() {
+		//Get all whitespace before the first word, so we can maintain the proper indentation
+		let doc = IAPSnippets.editor.doc;
+		let cursor = doc.getCursor();
+		let currLine = cursor.line;
+		let currCol = cursor.ch;
+		var lineText = doc.getLine(currLine-1);
+		let lastLineCol = lineText.length;
+
+		let  = lineText.length;
+
+		doc.setSelection({line:currLine-1,ch:lastLineCol},{line:currLine,ch:currCol});
+		doc.replaceSelection('');
+
 	}
 
 	function getWordUnderCursor() {
