@@ -7,15 +7,23 @@ Property Highlighter
 * A `Toggle Non-Defaults` button will highlight non-defualt values with a yellow background when toggled.
 <YouTube Video Pending>
 
-Persisent Filter and Persistent Attribute Focus (not yet implemented)
+Persisent Filter and Persistent Attribute Focus
 * After you apply a filter to a component, that filter will persist as you switch to other components 
 * Switching between components keeps the focus on whatever attribute you were last viewing
-<YouTube Video Pending>
+* This feature exists in Apex 5.2, but we've added it to 5.1 and earlier.
 
-Page Builder LOV Viewer (not yet implemented)
-* Preview a LOV before you select it in page builder
-<YouTube Video Pending>
+Autocomplete PL/SQL editor
+* All Apex/Oracle functions that are documented show automatically as you type.
+* You can expand the snippet to get all of their parameters
+* There is a URL "more" button at the bottom of the snippet which you can click to go straight to the procedure's documentation
 
+Improved Select fields
+* Selects with more than 7 options have a seach feature built in that allows you to find an option simply by typing
+
+Show Already Selected Page Items To Select
+* When adding a page item to a "Page Items To Select" property, you can see what items have already been chosen
+
+<Youtube Video - Pending>
 
 ### Chrome Installation
 
