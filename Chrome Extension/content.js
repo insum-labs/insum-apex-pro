@@ -163,6 +163,7 @@ addInsumLogo();
 				}else if (filterCookie == 1) {
 					$('#pe_showNonDefaults').css('background-color','#DEEFFB');
 					$('#pe_showNonDefaults').css('border','1px solid #B6DAF6');
+
 					SAP.hideDefaultItems = true;
 
 				}else{
@@ -696,22 +697,34 @@ addInsumLogo();
 	function addOrRemoveHighlighting(toHighlight, toDeHighlight) {
 		//console.log('allNonDefaultNodes', allNonDefaultNodes)
 		$.each(toHighlight, function() {
-			$(this).css('background-color','#FFFFFF');
-			$(this).parent().parent().css('background-color', '#fcf8e3'); //This color is taken from https://v4-alpha.getbootstrap.com/components/alerts
-			$(this).parent().parent().css('border', '1px solid #faf2cc'); //This color is also taken from there
-																																		//The old colors were FFEFB1 and FFE065
-
-			$(this).css('border', '1px solid #FFE065'); //Color is yellow
+			addHighlightCss(this);
 		});
 
 		$.each(toDeHighlight, function() {
-			//$(this).css('background-color','#FFFFFF');
-			$(this).parent().parent().css('background-color', '#FFFFFF'); //Back to white
-			$(this).parent().parent().css('border', ''); //No more color!
-			$(this).css('border', ''); //Color is yellow
+			removeHighlightCss(this)
 		});
 
 
+	}
+
+	function addHighlightCss(el) {
+		$(el).css('background-color','#FFFFFF');
+		let $outsideDiv = $(el).parent().parent();
+		$outsideDiv.css('background-color', '#fcf8e3');  //This color is taken from https://v4-alpha.getbootstrap.com/components/alerts
+		//$outsideDiv.css('box-shadow','inset 1px 1px 1px 1px');
+		//$outsideDiv.css('color', '#faf2cc');
+
+		//$(el).parent().parent().css('border', '1px solid #faf2cc'); //This color is also taken from there
+																																	 //The old colors were FFEFB1 and FFE065
+		$(el).css('border', '1px solid #FFE065'); //Color is yellow
+
+	}
+
+	function removeHighlightCss(el) {
+		//$(this).css('background-color','#FFFFFF');
+		//$(el).parent().parent().css('background-color', '#FFFFFF'); //Back to white
+		//$(el).parent().parent().css('box-shadow', ''); //No more color!
+		$(el).css('border', ''); //Color is no longer yellow
 
 	}
 
