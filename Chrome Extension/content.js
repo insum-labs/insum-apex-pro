@@ -721,8 +721,7 @@ addInsumLogo();
 	}
 
 	function removeHighlightCss(el) {
-		//$(this).css('background-color','#FFFFFF');
-		//$(el).parent().parent().css('background-color', '#FFFFFF'); //Back to white
+		$(el).parent().parent().css('background-color', '#FFFFFF'); //Back to white
 		//$(el).parent().parent().css('box-shadow', ''); //No more color!
 		$(el).css('border', ''); //Color is no longer yellow
 
