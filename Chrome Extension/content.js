@@ -1409,7 +1409,10 @@ chrome.storage.sync.get("allKeys", function(allKeys) {
 								$(addedNode).find('select').each(function() {
 									if($(this).find('option').length > 6) {
 										let id = $(this).prop('id');
-										$(this).select2();
+										$(this).select2({
+											width: '100%'
+										});
+
 										//Trigger the change event for the node so that Apex knows the value has changed
 										//TODO: Make sure it has an id, if it doesn't then we'll have to find it some other way.
 										$(this).on("select2:select", function (e) {
