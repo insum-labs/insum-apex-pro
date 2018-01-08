@@ -1123,7 +1123,7 @@ addInsumLogo();
 					}
 				}
 		}
-		else if(lineWords[wordMaxIndex].length >= 2) {
+		else if(lineWords[wordMaxIndex].length > 2) {
 				for (let keyword of IAPSnippets.dbDataStore.keywords){
 						if (stringStartsWith(keyword, lineWords[wordMaxIndex])){
 								//allSuggestions.push(IAPSnippets.getKeywordSuggestion(keyword, suggestInfo.prefix));
