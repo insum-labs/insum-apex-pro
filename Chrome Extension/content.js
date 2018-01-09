@@ -957,10 +957,22 @@ addInsumLogo();
 	createMutationObserver();
 
 	IAPSnippets.editor = {};
+	IAPSnippets.suggestions = [];
 
 	$('body').on('dialogclose', function() {
-		destroyDecorationAndSnippet();
+		IAPSnippets.destroyDecorationAndSnippet();
 	});
+
+	$('body').on('keyup', function(e) {
+		if(e.keyCode == 27) { //escape key
+			if(IAPSnippets.snippet || IAPSnippets.suggestions.length > 0) {
+				IAPSnippets.destroyDecorationAndSnippet();
+				$('#editorDlg-codeEditor textarea').focus();
+				IAPSnippets.suggestions = [];
+			}
+		}
+	});
+
 
 	function createMutationObserver() {
 			let target = $('body')[0];
@@ -1003,22 +1015,32 @@ addInsumLogo();
 		IAPSnippets.editor.on('keyup', function(cm,e) {
 
 			if(e.keyCode >= 38 && e.keyCode <= 40) { //Ignore arrow keys
+				IAPSnippets.suggestions = [];
 				return;
 			}
 
 			if(e.keyCode == 13 && IAPSnippets.snippet) {
-				undoNewLine();
+				let doc = IAPSnippets.editor.doc;
+				let cursor = doc.getCursor();
+				let currLine = cursor.line;
+				let lineText = doc.getLine(currLine);
+				if(lineText.trim() != "") {
+					return;
+				} else {
+					undoNewLine();
+				}
 				expandSnippet();
 				e.stopPropagation();
 				e.preventDefault();
 				return;
 			} else if (e.keyCode == 13) {
+				IAPSnippets.suggestions = [];
 				return;
 			}
 
-			let suggestions = getSuggestions();
-			if(!suggestions) {
-				suggestions = [];
+			IAPSnippets.suggestions = getSuggestions();
+			if(!IAPSnippets.suggestions) {
+				IAPSnippets.suggestions = [];
 			}
 			//if(suggestions && suggestions.length) {
 
@@ -1034,7 +1056,7 @@ addInsumLogo();
 					return {
 						from: CodeMirror.Pos(cursor.line, start),
 							to: CodeMirror.Pos(cursor.line, end),
-						list: suggestions,
+						list: IAPSnippets.suggestions,
 					}
 				},
 				completeSingle: false,
@@ -1053,7 +1075,7 @@ addInsumLogo();
 		});
 
 		IAPSnippets.editor.on('refresh', function() {
-			destroyDecorationAndSnippet();
+			IAPSnippets.destroyDecorationAndSnippet();
 		});
 
 
@@ -1199,12 +1221,12 @@ addInsumLogo();
 
 		let lineWords = lineText.match(/[\w]+|\./g);
 		if(!lineWords || !lineWords.length) {
-			destroyDecorationAndSnippet();
+			IAPSnippets.destroyDecorationAndSnippet();
 			return;
 		}
 
 		if(lineWords.length < 3) {
-			destroyDecorationAndSnippet();
+			IAPSnippets.destroyDecorationAndSnippet();
 			return;
 		}
 
@@ -1219,7 +1241,7 @@ addInsumLogo();
 
 		//console.log(lineWords);
 		if(lineWords[wordMaxIndex -1] != '.') {
-			destroyDecorationAndSnippet();
+			IAPSnippets.destroyDecorationAndSnippet();
 			return;
 		} else {
 			packageName = lineWords[wordMaxIndex-2].toUpperCase();
@@ -1232,7 +1254,7 @@ addInsumLogo();
 			snippet = IAPSnippets.docDataStore[packageName][procName];
 			//console.log(snippet);
 		} else {
-			destroyDecorationAndSnippet();
+			IAPSnippets.destroyDecorationAndSnippet();
 			return;
 		}
 
@@ -1247,7 +1269,7 @@ addInsumLogo();
 
 		$(container).on('click', expandSnippet);
 
-		destroyDecorationAndSnippet();
+		IAPSnippets.destroyDecorationAndSnippet();
 
 		IAPSnippets.decoration = container;
 		createDecorationMarker();
@@ -1274,7 +1296,7 @@ addInsumLogo();
 		$('body').append(container);
 	}
 
-	function destroyDecorationAndSnippet() {
+	IAPSnippets.destroyDecorationAndSnippet = function() {
 		$(IAPSnippets.decoration).remove();
 		IAPSnippets.snippet = null;
 	}
@@ -1315,7 +1337,8 @@ addInsumLogo();
 				doc.replaceSelection('(\n' +
 															 '\t' + body +
 														 ' );');
-				destroyDecorationAndSnippet();
+				IAPSnippets.destroyDecorationAndSnippet();
+				IAPSnippets.suggestions = [];
 			}
 		}
 	}
@@ -1327,10 +1350,8 @@ addInsumLogo();
 		let cursor = doc.getCursor();
 		let currLine = cursor.line;
 		let currCol = cursor.ch;
-		var lineText = doc.getLine(currLine-1);
-		let lastLineCol = lineText.length;
-
-		let  = lineText.length;
+		let lastLineText = doc.getLine(currLine-1);
+		let lastLineCol = lastLineText.length;
 
 		doc.setSelection({line:currLine-1,ch:lastLineCol},{line:currLine,ch:currCol});
 		doc.replaceSelection('');
