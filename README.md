@@ -1,4 +1,4 @@
-# Insum Apex Pro
+# (Insum Apex Pro)[https://chrome.google.com/webstore/detail/insum-apex-pro/mjioniifffnmbdkkfmfjeclkpghlpmai]
 > Designed by Apex developers, for Apex developers.
 
 ### Features
@@ -28,7 +28,7 @@ Show Already Selected Page Items To Select
 ### Chrome Installation
 
 ### Installation
-1. Navigate to [https://chrome.google.com/webstore/detail/apex-property-highlighter/gojiepfnmlgpjlcmfjbmapeidinfoipa](https://chrome.google.com/webstore/detail/apex-property-highlighter/gojiepfnmlgpjlcmfjbmapeidinfoipa)
+1. Navigate to [https://chrome.google.com/webstore/detail/apex-property-highlighter/gojiepfnmlgpjlcmfjbmapeidinfoipa](https://chrome.google.com/webstore/detail/insum-apex-pro/mjioniifffnmbdkkfmfjeclkpghlpmai)
 2. Click "Add To Chrome"
 
 ### Project Sponsors
