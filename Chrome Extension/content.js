@@ -135,10 +135,8 @@ addInsumLogo();
 //SAP stands for "show altered properties"
 (function(SAP) {
 		SAP.allData = null;
-		let html = $('body').html();
-		SAP.version = html.match(/gApexVersion[\r\n\s\t]*=[\r\n\s\t]*"([^"]+)"/)[1];
-		SAP.version = parseFloat(SAP.version.substr(0,3));
-		SAP.language = html.match(/gLanguage[\r\n\s\t]*=[\r\n\s\t]*"([^")]+)"/)[1];
+		SAP.version = parseFloat(gApexVersion[0] + gApexVersion[1] + gApexVersion[2]);
+		SAP.language = gBuilderLang;
 		SAP.sessionId = $('[name="p_instance"]').val();
 		SAP.currentNodes = []; //currentNodes is the HTML nodes under consideration
 		SAP.currentProps = [];
@@ -172,25 +170,20 @@ addInsumLogo();
 					SAP.hideDefaultItems = false;
 				}
 				var highlightCookie = IAPPrefs.getPreference('highlightToggle');
-				// alert(highlightCookie);
-				if (highlightCookie ){
-						// alert('highlightCookie = false');
+				console.log('highlight cookie in document ready', highlightCookie);
+				if (highlightCookie == undefined ){
 						SAP.highlightNonDefaults = true;
 						IAPPrefs.setPreference('highlightToggle',1); // Checks to see if highlighting has been toggled
 						$('#pe_toggleNonDefaults').css('background-color','#DEEFFB');
 						$('#pe_toggleNonDefaults').css('border','1px solid #B6DAF6');
-						// alert('highlightCookie set to true');
-						// alert('Default values set');
-				}else if (highlightCookie == true) {
-					// alert('highlightCookie = 1');
+				} else if (highlightCookie == 1) {
 					SAP.highlightNonDefaults = true;
 					$('#pe_toggleNonDefaults').css('background-color','#DEEFFB');
 					$('#pe_toggleNonDefaults').css('border','1px solid #B6DAF6');
 
 				}else{
-					// alert('highlightCookie = 0');
-					SAP.highlightNonDefaults = true;
-					$('#pe_toggleNonDefaults').css('background-color','#DEEFFB');
+					SAP.highlightNonDefaults = false;
+					$('#pe_toggleNonDefaults').css('background-color','#FFFFFF');
 					$('#pe_toggleNonDefaults').css('border','none');
 				}
 		}) ;
@@ -1400,7 +1393,6 @@ chrome.storage.sync.get("allKeys", function(allKeys) {
 			//console.log('allKeyValuesObj', allKeyValuesObj);
 
 			var userPreferences = {};
-
 			for(key in allKeys) {
 				userPreferences[key] = allKeyValuesObj[key];
 			}
@@ -1483,7 +1475,7 @@ window.addEventListener("message", function(e) {
 					}
 					allKeys = allKeys.allKeys;
 					allKeys[key] = val;
-					//console.log('setting allkeys to: ', allKeys );
+					console.log('setting allkeys to: ', allKeys );
 					chrome.storage.sync.set({'allKeys': allKeys});
 				});
 
