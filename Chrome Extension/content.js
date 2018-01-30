@@ -1,7 +1,12 @@
 /*jshint esversion: 6*/
 
-console.log('Thank you for using Insum-Apex-Pro!\nGithub: https://github.com/insum-labs/insum-apex-pro\nWho We Are:https://www.insum.ca');
+if(!$('body.apex-page-designer').length) {
+	//We are on an Apex URL, but this isn't page designer
+	//e.g. http://*/*/wwv_flow.accept is only sometimes page designer
+	//So we must exit
+} else {
 
+console.log('Thank you for using Insum-Apex-Pro!\nGithub: https://github.com/insum-labs/insum-apex-pro\nWho We Are:https://www.insum.ca');
 
 
 /**
@@ -16,9 +21,6 @@ function append(func, params) {
 }
 
 let appendToPage = function(userPreferences) {
-
-
-
 
 /**
 * Add the inSum logo
@@ -151,8 +153,9 @@ addInsumLogo();
 		listenForChangesToCompAndCompType();
 		initOrResetAllData();
 
+		// Get initial state of SAP.hideDefaultItems and SAP.highlightNonDefaults
+		// Also, apply the appropriate css as a result
 		$(document).ready(function(){
-				// alert('page is loading');
 				var filterCookie = IAPPrefs.getPreference('firstFilter');
 				if (!filterCookie){
 						IAPPrefs.setPreference('firstFilter',0); // Checks to see if non defaults only has been toggled
@@ -170,7 +173,7 @@ addInsumLogo();
 					SAP.hideDefaultItems = false;
 				}
 				var highlightCookie = IAPPrefs.getPreference('highlightToggle');
-				console.log('highlight cookie in document ready', highlightCookie);
+				//console.log('highlight cookie in document ready', highlightCookie);
 				if (highlightCookie == undefined ){
 						SAP.highlightNonDefaults = true;
 						IAPPrefs.setPreference('highlightToggle',1); // Checks to see if highlighting has been toggled
@@ -188,7 +191,7 @@ addInsumLogo();
 				}
 		}) ;
 
-
+		//Anytime we got to a different page from the #go_to_page element, we must restart
 		$('body').on('change','#go_to_page',
 			function() {
 				SAP.currentComponentTypeId = pe.COMP_TYPE['PAGE'];
@@ -303,7 +306,8 @@ addInsumLogo();
 							defaultValue = "#DEFAULT#:" + defaultValue;
 					}
 
-					if(properties[key].propertyId == pe.PROP['FIRE_ON_PAGE_LOAD'])  {//Assumption "Fire on page load" is only for DA's
+					if(properties[key].propertyId == pe.PROP['FIRE_ON_PAGE_LOAD'])  {
+						//Assumption "Fire on page load" is only for DA's
 						//console.log('Fire on Page Load');
 						//console.log('SAP.allData', SAP.allData);
 						//console.log('SAP.allData[pe.COMP_TYPE['DA_ACTION']].pluginType', SAP.allData[pe.COMP_TYPE['DA_ACTION']].pluginType);
@@ -341,7 +345,7 @@ addInsumLogo();
 						properties[key].defaultValue = 'YES';
 					} else if(properties[key].propertyId == "14") { //We hardcode to 14 because "CURSOR_FOCUS" is not contained in pe.PROP
 						properties[key].defaultValue = 'NO_FIRST_ITEM';
-					} else if(properties[key].propertyId == "30") { //We hardcode to 14 because "FORM_AUTO_COMPLETE" is not contained in pe.PROP
+					} else if(properties[key].propertyId == "30") { //We hardcode to 30 because "FORM_AUTO_COMPLETE" is not contained in pe.PROP
 						properties[key].defaultValue = 'OFF';
 					} else if(properties[key].propertyId == pe.PROP["USER_INTERFACE"]) { //We cant find where this is being set
 						properties[key].defaultValue = 'Desktop';
@@ -976,8 +980,7 @@ addInsumLogo();
 							for (let j = 0; j < mutations[i].addedNodes.length; j++) {
 								var addedNode = mutations[i].addedNodes[j];
 								//console.log(addedNode);
-								//
-								//
+
 								$(addedNode).find('.ui-dialog-title').each(function() {
 									//console.log('found ui-dialog-title', $(this).text());
 									let text = $(this).text().trim();
@@ -1475,7 +1478,7 @@ window.addEventListener("message", function(e) {
 					}
 					allKeys = allKeys.allKeys;
 					allKeys[key] = val;
-					console.log('setting allkeys to: ', allKeys );
+					//console.log('setting allkeys to: ', allKeys );
 					chrome.storage.sync.set({'allKeys': allKeys});
 				});
 
@@ -1485,3 +1488,5 @@ window.addEventListener("message", function(e) {
 
 	}
 }, false);
+
+}
