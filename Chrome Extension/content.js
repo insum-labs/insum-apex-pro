@@ -163,13 +163,9 @@ addInsumLogo();
 						// alert('non default values are not exclusive by default.')
 				}else if (filterCookie == 1) {
 					$('#pe_showNonDefaults').css('background-color','#DEEFFB');
-					$('#pe_showNonDefaults').css('border','1px solid #B6DAF6');
-
 					SAP.hideDefaultItems = true;
-
 				}else{
 					$('#pe_showNonDefaults').css('background-color','#FFFFFF');
-					$('#pe_showNonDefaults').css('border','none');
 					SAP.hideDefaultItems = false;
 				}
 				var highlightCookie = IAPPrefs.getPreference('highlightToggle');
@@ -178,16 +174,12 @@ addInsumLogo();
 						SAP.highlightNonDefaults = true;
 						IAPPrefs.setPreference('highlightToggle',1); // Checks to see if highlighting has been toggled
 						$('#pe_toggleNonDefaults').css('background-color','#DEEFFB');
-						$('#pe_toggleNonDefaults').css('border','1px solid #B6DAF6');
 				} else if (highlightCookie == 1) {
 					SAP.highlightNonDefaults = true;
 					$('#pe_toggleNonDefaults').css('background-color','#DEEFFB');
-					$('#pe_toggleNonDefaults').css('border','1px solid #B6DAF6');
-
 				}else{
 					SAP.highlightNonDefaults = false;
 					$('#pe_toggleNonDefaults').css('background-color','#FFFFFF');
-					$('#pe_toggleNonDefaults').css('border','none');
 				}
 		}) ;
 
@@ -229,7 +221,6 @@ addInsumLogo();
 					SAP.hideDefaultItems = !SAP.hideDefaultItems; //Todo: have a button set this
 							if(SAP.hideDefaultItems ) {
 									$('#pe_showNonDefaults').css('background-color','#DEEFFB');
-									$('#pe_showNonDefaults').css('border','1px solid #B6DAF6');
 									IAPPrefs.setPreference('firstFilter',1);
 									SAP.currentNodes = $('#peComponentProperties [data-property-id]').toArray();
 
@@ -237,7 +228,6 @@ addInsumLogo();
 									updatePropertyNodes();
 							}else {
 									$('#pe_showNonDefaults').css('background-color','#FFFFFF');
-									$('#pe_showNonDefaults').css('border','none');
 									IAPPrefs.setPreference('firstFilter',0);
 									hideOrShowItems($('#peComponentProperties [data-property-id]').toArray(), [])
 						 }
@@ -250,14 +240,13 @@ addInsumLogo();
 		function createHighlightButton() {
 			$('#peToolbar .a-Toolbar-items.a-Toolbar-items--left').append('<button class="a-Button a-Button--noLabel a-Button--withIcon" ' +
 																																		'onclick="void(0);" aria-label="Toggle Non-Defaults" type="button" ' +
-																																		'id="pe_toggleNonDefaults" title="Toggle Non-Defaults">' +
-																																		'<span style="color:black" class="a-Icon icon-edit" aria-hidden="true">'+
+																																		'id="pe_toggleNonDefaults" title="Toggle Non-Defaults" style="left:1px;">' +
+																																		'<span style="color:black;" class="a-Icon icon-edit" aria-hidden="true">'+
 																																		'</span></button>');
 			$('#pe_toggleNonDefaults').bind('click', function() {
 					SAP.highlightNonDefaults = !SAP.highlightNonDefaults;
 							if(SAP.highlightNonDefaults ) {
 									$('#pe_toggleNonDefaults').css('background-color','#DEEFFB');
-									$('#pe_toggleNonDefaults').css('border','1px solid #B6DAF6');
 
 									SAP.currentNodes = $('#peComponentProperties [data-property-id]').toArray();
 
@@ -267,12 +256,8 @@ addInsumLogo();
 									IAPPrefs.setPreference('highlightToggle',1);
 							}else{
 									$('#pe_toggleNonDefaults').css('background-color','#FFFFFF');
-									$('#pe_toggleNonDefaults').css('border','none');
-
 									//Remove all highlighting
 									addOrRemoveHighlighting([], $('#peComponentProperties [data-property-id]').toArray());
-
-
 									IAPPrefs.setPreference('highlightToggle',0);
 					}
 			});
