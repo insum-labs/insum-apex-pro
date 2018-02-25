@@ -21,11 +21,13 @@
         "thirdParty/select2-modified.min.css"
       ],
       "matches": [
-        "*://*/*/f?p=4000:4500*",
+        "*://*/*/f?p=4000:*",
+        "*://*/*/f?p=4500:*",
         "*://*/*/*/wwv_flow.accept",
         "*://*/*/wwv_flow.accept"
       ],
-      "run_at": "document_end"
+      "run_at": "document_end",
+      "all_frames": true
     }
   ],
   "description": "Develop Apex Applications Like a Pro!",
@@ -37,5 +39,5 @@
   ],
   "icons": {"128": "in_ronsard_crystal_bold_slightly_squeezed_white_background.png"},
   "update_url": "https://clients2.google.com/service/update2/crx",
-  "version": "1.7.91"
+  "version": "1.8"
 }
