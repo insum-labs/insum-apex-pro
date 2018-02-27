@@ -1,15 +1,12 @@
 /*jshint esversion: 6*/
-
-if(window.location.href.indexOf('wwv_flow.accept') != -1 && !$('body.apex-page-designer').length) {
-	//We are on an Apex URL, but this isn't page designer
-	//e.g. http://*/*/wwv_flow.accept is only sometimes page designer
+if(window.location.href.indexOf('wwv_flow.accept') != -1 &&
+ !$('input[name="p_flow_id"][value="4000"],input[name="p_flow_id"]').length
+) {
+	//We are on an Apex URL, but this isn't an apex developer page.
+	//e.g. http://*/*/wwv_flow.accept is only sometimes a developer page. It can be arrived from a user.
 	//So we must exit
-	//console.log('testing are we hitting apex-page-designer?');
 } else {
-
-console.log('Thank you for using Insum-Apex-Pro!\nGithub: https://github.com/insum-labs/insum-apex-pro\nWho We Are: https://www.insum.ca');
-
-
+	consoleThankYouMessage();
 /**
 * @function append
 * @param {} func
@@ -21,23 +18,14 @@ function append(func, params) {
 		$('body').append(script);
 }
 
-//We know we are on an apex page because of the manifest.
-//However, we must determine if we are running in page designer
-let pageDesignerUrls = [
-	"f?p=4000:4500",
-	"wwv_flow.accept",
-	"wwv_flow.accept"
-];
-
 let isRunningOnPageDesigner;
 
-for(let i = 0; i < pageDesignerUrls.length; i++) {
-	if(window.location.href.indexOf(pageDesignerUrls[i]) != -1) {
-		isRunningOnPageDesigner = true;
-		addPageDesignerCode();
-		break;
-	}
-	isRunningOnPageDesigner = false;
+
+isRunningOnPageDesigner = $('input[name="p_flow_id"][value="4000"]').length != 0 &&
+												  $('input[name="p_flow_step_id"][value="4500"]').length != 0;
+
+if(isRunningOnPageDesigner) {
+	addPageDesignerCode();
 }
 
 function addPageDesignerCode() {
@@ -990,9 +978,15 @@ function addPageDesignerCode() {
 									$(addedNode).find('.ui-dialog-title').each(function() {
 										//console.log('found ui-dialog-title', $(this).text());
 										let text = $(this).text().trim();
-										if(text == 'Code Editor - PL/SQL Code') {
+										//Todo: Use apex.lang
+										if(text == 'Code Editor - PL/SQL Code' ||
+									     text == 'Code Editor - SQL Query' ||
+										 	 text == 'Code Editor - PL/SQL Expression' ||
+										   text == 'Code Editor - SQL Expression' ||
+										   text == 'Code Editor - PL/SQL Function Body' ||
+										   text == 'Code Editor') {
 											//console.log('Detected - Opened Pl/SQL Editor!');
-											addSnippetListeners();
+											addSnippetListeners(text);
 
 											//Break out of the loop by returning false;
 											return false;
@@ -1044,7 +1038,6 @@ function addPageDesignerCode() {
 				if(!IAPSnippets.suggestions) {
 					IAPSnippets.suggestions = [];
 				}
-				//if(suggestions && suggestions.length) {
 
 				let cursor = IAPSnippets.editor.getCursor();
 				let line = IAPSnippets.editor.getLine(cursor.line)
@@ -1432,7 +1425,6 @@ function addPageDesignerCode() {
 							//console.log('got mutation', mutations[i]);
 							for (let j = 0; j < mutations[i].addedNodes.length; j++) {
 								var addedNode = mutations[i].addedNodes[j];
-								//console.log(addedNode);
 								$(addedNode).find('select').each(function() {
 										makeSelect2(this);
 								});
@@ -1461,25 +1453,28 @@ function addPageDesignerCode() {
 		//	it doesn't have enough options
 		//	it doesn't have an id
 		//	it's a "multiple"
+		//	it's inside of an IRR, IGG, (other plugins pending)
 		if($(t).hasClass("select2-hidden-accessible") ||
 		   $(t).find('option').length < 7 ||
 			 !$(t).prop('id') ||
-		 	 $(t).prop('multiple')) {
+		 	 $(t).prop('multiple') ||
+		 	 $(t).parents('.a-IRR-container,.a-IG').length > 0 ) {
 			return;
 		}
 		else {
 			let id = $(t).prop('id');
 			let nullOption = $(t).find('[value=""]').html();
 			let selectHeight = $(t).css('height') || [0].getBoundingClientRect().height + 'px';
+			let selectFontSize = $(t).css('font-size') || '12px';
+			let selectFontFamily = $(t).css('font-family') || 'Helvetica Neue,Helvetica,Arial,sans-serif';
 
 			$(t).select2({
-				width: isRunningOnPageDesigner ? '100%' : $(t).css('width'),
+				width: isRunningOnPageDesigner ? '100%' : ($(t).css('width') || '100%'),
 				allowClear: nullOption ? true : false,
 				placeholder: nullOption ? nullOption : undefined
 			});
 
 			//Trigger the change event for the node so that Apex knows the value has changed
-
 			$(t).on("select2:select", function (e) {
 				triggerChangeForApex(me, id);
 			});
@@ -1492,10 +1487,11 @@ function addPageDesignerCode() {
 			    .find('.select2-selection,.select2-selection__rendered,.select2-selection__arrow')
 					.css({
 						height: selectHeight,
-						'line-height': selectHeight
+						'line-height': selectHeight,
+						'font-size': selectFontSize,
+						'font-family': selectFontFamily,
 					});
 
-			$(t).next('.select2').css('display', 'block');
 			//Call the select2 when the select's "change" event occurs.
 			append(function(params) {
 				let id = params.id;
@@ -1542,6 +1538,24 @@ function addPageDesignerCode() {
 
 
 
+
+function consoleThankYouMessage() {
+
+	let weAreTopWindow;
+	try {
+			weAreTopWindow = window.self == window.top;
+	} catch (e) {
+			//The top window blocked our access due to a same-origin policy.
+			//This will never occur in apex unless the developers ever add iframes from a different origin
+			weAreTopWindow = false;
+	}
+	if(weAreTopWindow) {
+		console.log('Thank you for using Insum-Apex-Pro!\n' +
+		            'Github: https://github.com/insum-labs/insum-apex-pro\n'+
+								'Who We Are: https://www.insum.ca');
+	}
+
+}
 
 window.addEventListener("message", function(e) {
 	//console.log('Got message ', e.data);
