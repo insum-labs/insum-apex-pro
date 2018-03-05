@@ -1,4 +1,5 @@
 /*jshint esversion: 6*/
+
 if(window.location.href.indexOf('wwv_flow.accept') != -1 &&
  !$('input[name="p_flow_id"][value="4000"],input[name="p_flow_id"]').length
 ) {
@@ -6,6 +7,7 @@ if(window.location.href.indexOf('wwv_flow.accept') != -1 &&
 	//e.g. http://*/*/wwv_flow.accept is only sometimes a developer page. It can be arrived from a user.
 	//So we must exit
 } else {
+
 	consoleThankYouMessage();
 /**
 * @function append
@@ -18,9 +20,8 @@ function append(func, params) {
 		$('body').append(script);
 }
 
+
 let isRunningOnPageDesigner;
-
-
 isRunningOnPageDesigner = $('input[name="p_flow_id"][value="4000"]').length != 0 &&
 												  $('input[name="p_flow_step_id"][value="4500"]').length != 0;
 
@@ -980,11 +981,10 @@ function addPageDesignerCode() {
 										let text = $(this).text().trim();
 										//Todo: Use apex.lang
 										if(text == 'Code Editor - PL/SQL Code' ||
-									     text == 'Code Editor - SQL Query' ||
+									     //text == 'Code Editor - SQL Query' ||
 										 	 text == 'Code Editor - PL/SQL Expression' ||
-										   text == 'Code Editor - SQL Expression' ||
-										   text == 'Code Editor - PL/SQL Function Body' ||
-										   text == 'Code Editor') {
+										   //text == 'Code Editor - SQL Expression' ||
+										   text == 'Code Editor - PL/SQL Function Body') {
 											//console.log('Detected - Opened Pl/SQL Editor!');
 											addSnippetListeners(text);
 
@@ -1417,6 +1417,11 @@ function addPageDesignerCode() {
 		makeSelect2(this);
 	});
 
+
+  if(isRunningOnPageDesigner) {
+    updatePropertyEditorWidths();
+  }
+
 	function createMutationObserver() {
 			let target = $('body')[0];
 			let observer = new MutationObserver(function(mutations) {
@@ -1501,6 +1506,8 @@ function addPageDesignerCode() {
 				});
 			}, {id: id});
 		}
+
+
 	}
 
 	function triggerChangeForApex(me, id) {
@@ -1532,7 +1539,49 @@ function addPageDesignerCode() {
 			}
 		});
 
+  //This function fixes the "strangeness" of PropertyEditor Select2 widths.
+  //  For example, it fixes an issue where if the property editor is on the right,
+  //   and the width of property editor is small
+  //   and the item chosen in the select2 is long
+  //   then if the select2's width is simply "100%" it would outstretch the width of property editor.
+  function updatePropertyEditorWidths() {
+    append(
+    function() {
+      $('body').on('splitterchange', function(e,f) {
+        $('.select2').each(function() {
+          $(this).css('width','0px');
+          let $parent = $(this).parents('.a-Property');
 
+          let $label = $parent.find('.a-Property-labelContainer');
+          let labelWidth = $label.css('display') == 'table-cell' ? $label.outerWidth() : 0;
+
+          let $button = $parent.find('.a-Property-buttonContainer button');
+          let buttonWidth = $button.outerWidth() + 30;
+
+          let parentWidth = $parent.outerWidth();
+
+          let remainingWidth = (parentWidth - labelWidth - buttonWidth) + 'px';
+
+          let $selectContainer =  $(this).parents('.a-Property-fieldContainer');
+
+          if($label.css('display') == 'table-cell') {
+        	  $selectContainer.css('max-width', '100%' );
+        	  $selectContainer.css('width', '100%' );
+        	  $(this).css('width', remainingWidth);
+          } else {
+
+            $selectContainer.css('max-width', '' );
+            $selectContainer.css('width', remainingWidth );
+
+            $(this).css('width', remainingWidth);
+
+          }
+
+        });
+
+      })
+    });
+  }
 
 }( window.IAPSelect2 = window.IAPSelect2 || {} ));
 
