@@ -18,7 +18,8 @@
         "content.js"
       ],
       "css": [
-        "thirdParty/select2-modified.min.css"
+        "thirdParty/select2-modified.min.css",
+        "stylesheet.css"
       ],
       "matches": [
         "*://*/*/f?p=4000:*",
@@ -30,14 +31,17 @@
       "all_frames": true
     }
   ],
-  "description": "Develop Apex Applications Like a Pro!",
+  "description": "Develop APEX Applications Like a Pro!",
   "manifest_version": 2,
-  "name": "Insum Apex Pro",
+  "name": "Insum APEX Pro",
+  "web_accessible_resources": [
+    "thirdParty/select2-adminlte.css"
+  ],
   "permissions": [
     "webNavigation",
     "storage"
   ],
   "icons": {"128": "in_ronsard_crystal_bold_slightly_squeezed_white_background.png"},
   "update_url": "https://clients2.google.com/service/update2/crx",
-  "version": "1.8.15"
+  "version": "1.8.25"
 }

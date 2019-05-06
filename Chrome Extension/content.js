@@ -45,8 +45,6 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
                 $('body').append('<div id="INSUM_button_menu" class="a-Menu" style="position: absolute; top: 39px; right:20px; display: none;" tabindex="-1" role="menu">	  <div class="a-Menu-content"><ul id="INSUM_button_menu_ul"></ul></div></div>');
 
-                //console.log($insumButton);
-
                 let isInClick = false;
                 $('#in-logo').on('click.inClick', function(e) {
                     // e.preventDefault();
@@ -152,7 +150,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
             }(window.IAPPrefs = window.IAPPrefs || {}));
 
             //SAP stands for "show altered properties"
-            (function(SAP) {
+            window.SAP = {};
+            (function() {
                 SAP.allData = null;
                 SAP.version = parseFloat(gApexVersion[0] + gApexVersion[1] + gApexVersion[2]);
                 SAP.language = gBuilderLang;
@@ -164,6 +163,10 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 SAP.hideDefaultItems = false;
                 SAP.highlightNonDefaults = true;
                 SAP.isResettingFromGotoPageFeature = false;
+                SAP.colorMode = null;
+                SAP.buttonColorWhenActive = null;
+                SAP.backgroundColorForHighlighted = null;
+                SAP.nuetralBackgroundColor = null;
                 createFilterButton();
                 createHighlightButton();
                 createMutationObserver();
@@ -173,16 +176,25 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 // Get initial state of SAP.hideDefaultItems and SAP.highlightNonDefaults
                 // Also, apply the appropriate css as a result
                 $(document).ready(function() {
+
+                    SAP.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length > 0 ? 'White' : 'Dark');
+                    SAP.buttonColorWhenActive = (SAP.colorMode == 'Dark' ? 'silver' : '#DEEFFB');
+                    SAP.backgroundColorForHighlighted = (SAP.colorMode == 'Dark' ? '#656565' : '#fcf8e3');
+                    SAP.nuetralBackgroundColor = (SAP.colorMode == 'Dark' ? '#47484a' : '#fcf8e3');
+                    SAP.borderColor = (SAP.colorMode == 'Dark' ? '#656565' : 'fcf8e3');
+                    SAP.boxShadow = 'unset';
+                    SAP.nuetralBoxShadow = (SAP.colorMode == 'Dark' ? 'unset' : 'orange');
+
                     var filterCookie = IAPPrefs.getPreference('firstFilter');
                     if (!filterCookie) {
                         IAPPrefs.setPreference('firstFilter', 0); // Checks to see if non defaults only has been toggled
                         SAP.hideDefaultItems = false;
                         // alert('non default values are not exclusive by default.')
                     } else if (filterCookie == 1) {
-                        $('#pe_showNonDefaults').css('background-color', '#DEEFFB');
+                        $('#pe_showNonDefaults').css('background-color', SAP.buttonColorWhenActive);
                         SAP.hideDefaultItems = true;
                     } else {
-                        $('#pe_showNonDefaults').css('background-color', '#FFFFFF');
+                        $('#pe_showNonDefaults').css('background-color', 'rgba(0,0,0,0)');
                         SAP.hideDefaultItems = false;
                     }
                     var highlightCookie = IAPPrefs.getPreference('highlightToggle');
@@ -190,13 +202,13 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     if (highlightCookie == undefined) {
                         SAP.highlightNonDefaults = true;
                         IAPPrefs.setPreference('highlightToggle', 1); // Checks to see if highlighting has been toggled
-                        $('#pe_toggleNonDefaults').css('background-color', '#DEEFFB');
+                        $('#pe_toggleNonDefaults').css('background-color', SAP.buttonColorWhenActive);
                     } else if (highlightCookie == 1) {
                         SAP.highlightNonDefaults = true;
-                        $('#pe_toggleNonDefaults').css('background-color', '#DEEFFB');
+                        $('#pe_toggleNonDefaults').css('background-color', SAP.buttonColorWhenActive);
                     } else {
                         SAP.highlightNonDefaults = false;
-                        $('#pe_toggleNonDefaults').css('background-color', '#FFFFFF');
+                        $('#pe_toggleNonDefaults').css('background-color', 'rgba(0,0,0,0)');
                     }
                 });
 
@@ -237,14 +249,14 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     $('#pe_showNonDefaults').bind('click', function() {
                         SAP.hideDefaultItems = !SAP.hideDefaultItems; //Todo: have a button set this
                         if (SAP.hideDefaultItems) {
-                            $('#pe_showNonDefaults').css('background-color', '#DEEFFB');
+                            $('#pe_showNonDefaults').css('background-color', SAP.buttonColorWhenActive);
                             IAPPrefs.setPreference('firstFilter', 1);
                             SAP.currentNodes = $('#peComponentProperties [data-property-id]').toArray();
 
 
                             updatePropertyNodes();
                         } else {
-                            $('#pe_showNonDefaults').css('background-color', '#FFFFFF');
+                            $('#pe_showNonDefaults').css('background-color', 'rgba(0,0,0,0)');
                             IAPPrefs.setPreference('firstFilter', 0);
                             hideOrShowItems($('#peComponentProperties [data-property-id]').toArray(), [])
                         }
@@ -263,7 +275,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     $('#pe_toggleNonDefaults').bind('click', function() {
                         SAP.highlightNonDefaults = !SAP.highlightNonDefaults;
                         if (SAP.highlightNonDefaults) {
-                            $('#pe_toggleNonDefaults').css('background-color', '#DEEFFB');
+                            $('#pe_toggleNonDefaults').css('background-color', SAP.buttonColorWhenActive);
 
                             SAP.currentNodes = $('#peComponentProperties [data-property-id]').toArray();
 
@@ -272,7 +284,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                             // alert('now highlighting non-default values');
                             IAPPrefs.setPreference('highlightToggle', 1);
                         } else {
-                            $('#pe_toggleNonDefaults').css('background-color', '#FFFFFF');
+                            $('#pe_toggleNonDefaults').css('background-color', 'rgba(0,0,0,0)');
                             //Remove all highlighting
                             addOrRemoveHighlighting([], $('#peComponentProperties [data-property-id]').toArray());
                             IAPPrefs.setPreference('highlightToggle', 0);
@@ -705,23 +717,28 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 }
 
                 function addHighlightCss(el) {
-                    $(el).css('background-color', '#FFFFFF');
                     let $outsideDiv = $(el).parent().parent();
-                    $outsideDiv.css('background-color', '#fcf8e3'); //This color is taken from https://v4-alpha.getbootstrap.com/components/alerts
-                    //$outsideDiv.css('box-shadow','inset 1px 1px 1px 1px');
+                    $(el).css('background-color', SAP.nuetralBackgroundColor);
+                    $outsideDiv.css('background-color', SAP.backgroundColorForHighlighted); //This color is taken from https://v4-alpha.getbootstrap.com/components/alerts
+                    //$outsideDiv.css('box-shadow','inset 1px 1px 1px 1px')'
+
+                    //  4px 0 0 0 #FFF inset, -4px 0 0 0 #FFF inset, 0 -1px 0 0 #E0E0E0 inset
+
                     //$outsideDiv.css('color', '#faf2cc');
 
                     //$(el).parent().parent().css('border', '1px solid #faf2cc'); //This color is also taken from there
-                    //The old colors were FFEFB1 and FFE065
-                    $(el).css('border', '1px solid #FFE065'); //Color is yellow
+                    $(el).css('border', '1px solid ' + SAP.borderColor); //Color is yellow
+                    $(el).css('box-shadow', 'unset');
 
                 }
 
                 function removeHighlightCss(el) {
-                    $(el).parent().parent().css('background-color', '#FFFFFF'); //Back to white
-                    //$(el).parent().parent().css('box-shadow', ''); //No more color!
-                    $(el).css('border', ''); //Color is no longer yellow
+                  let $outsideDiv = $(el).parent().parent();
 
+                    $(el).parent().parent().css('background-color', 'rgba(0,0,0,0)'); //Back to parent's color
+                    //$(el).parent().parent().css('box-shadow', ''); //No more color!
+                    $(el).css('border', SAP.nuetralBackgroundColor); //Color is no longer yellow
+                    $(el).css('box-shadow', SAP.nuetralBoxShadow);
                 }
 
                 /**
@@ -787,7 +804,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
 
 
-            })(window.SAP = window.SAP || {});
+            })();
 
 
 
@@ -797,16 +814,26 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
              * @function focusLastSelectedProperty
              */
             function focusLastSelectedProperty() {
+
                 // Using getPreference and getPreference from builtin Apex functions
-                if (IAPPrefs.getPreference("LastSeclectedPropCookie") == 1) {
+                if (IAPPrefs.getPreference("LastSelectedPropCookie") == 1) {
                     // console.log('inside focusLastSelectedProperty');
                     // get curretly selected property id
                     var currentSelected = $(document.activeElement).data('property-id');
+                    var currentPosition;
+                    if(currentSelected) {
+                       currentPosition = $(document.activeElement)[0].getBoundingClientRect().top;
+                    } else {
+                      currentPosition = undefined;
+                    }
+
                     // update currentSelected
-                    $(document).on('click.updateCurrentSelection', function() {
-                        let currentSelectedCheck = $(document.activeElement).data('property-id');
+                    $(document).on('click.updateCurrentSelection', '#pe .u-ScrollingViewport', function() {
+                        let currentSelectedCheck = $(document.activeElement).parents('.a-Property-fieldContainer').find('[data-property-id]').data('property-id');
+
                         if (currentSelectedCheck) {
                             currentSelected = currentSelectedCheck;
+                            currentPosition = $(document.activeElement)[0].getBoundingClientRect().top;
                         }
                         // console.log(currentSelected);
                     });
@@ -817,17 +844,33 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                             $(`[data-property-id=${currentSelected}]`).parent() &&
                             $(`[data-property-id=${currentSelected}]`).parent()[0]
                         ) {
-                            $(`[data-property-id=${currentSelected}]`).parents('.a-Property')[0].scrollIntoView();
+                            //Scroll the property item into view
+                            $(`[data-property-id=${currentSelected}]`).parents('.a-Property')[0].scrollIntoView(true);
+                            //Oftentimes the scrollbar gets scrolled as well when we do scrollIntoView(), so we make sure it's also in view
+                            $('#peToolbar')[0].scrollIntoView();
+                            //Now we want to make its viewing position the same as the earlier property
+                            console.log("  $('#pe .u-ScrollingViewport')[0].scrollTop, currentPosition, $(`[data-property-id=${currentSelected}]`)[0].getBoundingClientRect().top;");
+                            console.log($('#pe .u-ScrollingViewport')[0].scrollTop, currentPosition,  $(`[data-property-id=${currentSelected}]`)[0].getBoundingClientRect().top);
+
                             $(`[data-property-id=${currentSelected}]`).focus();
+                            $('#pe .u-ScrollingViewport')[0].scrollTop -= currentPosition - $(`[data-property-id=${currentSelected}]`)[0].getBoundingClientRect().top;
+                            $(`[data-property-id=${currentSelected}]`).parents('.a-Property')[0].scrollIntoViewIfNeeded();
+
+                        }
+                        else
+                        {
+                          currentSelected = undefined;
+                          currentPosition = undefined;
                         }
                     })
                 }
-                if (IAPPrefs.getPreference("LastSeclectedPropCookie") === null) {
-                    IAPPrefs.setPreference("LastSeclectedPropCookie", 1);
+                if (IAPPrefs.getPreference("LastSelectedPropCookie") === null) {
+                    IAPPrefs.setPreference("LastSelectedPropCookie", 1);
                     focusLastSelectedProperty();
                 }
-                if (IAPPrefs.getPreference("LastSeclectedPropCookie") == 0) {
+                if (IAPPrefs.getPreference("LastSelectedPropCookie") == 0) {
                     $(document).off("click.updateCurrentSelection");
+                    $(document).off("scroll.updateCurrentSelection");
                     $(document).off("selectionChanged.focusOnPropAfterSelection");
                 }
             }
@@ -835,8 +878,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
             focusLastSelectedProperty();
 
             // Add focusLastSelectedProperty selection to IN menu
-            addOptionToINMenu(label = "Focus Last Propery Selected", on_label = "Enable", off_label = "Disable", on_value = 1, off_value = 0, default_value = IAPPrefs.getPreference("LastSeclectedPropCookie"), callback = function(object, object_value, id) {
-                IAPPrefs.setPreference("LastSeclectedPropCookie", object_value);
+            addOptionToINMenu(label = "Focus Last Propery Selected", on_label = "Enable", off_label = "Disable", on_value = 1, off_value = 0, default_value = IAPPrefs.getPreference("LastSelectedPropCookie"), callback = function(object, object_value, id) {
+                IAPPrefs.setPreference("LastSelectedPropCookie", object_value);
                 focusLastSelectedProperty();
                 $(document).trigger("click.updateCurrentSelection");
             });
@@ -941,9 +984,6 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 })
             }
 
-
-
-
             //IAPSnippets - INSUM-APEX-PRO Snippets
             (function(IAPSnippets) {
                 createMutationObserver();
@@ -957,7 +997,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     IAPSnippets.destroyDecorationAndSnippet();
                 });
 
-                $('body').on('click', '#editorDlg-codeEditor_autocomplete', function() {
+                $('body').on('click', 'div[aria-describedby="editorDlg"]:has(.ui-dialog-title:contains("PL/SQL")) #editorDlg-codeEditor_autocomplete', function(e) {
+
                     IAPSnippets.destroyDecorationAndSnippet();
                     IAPPrefs.setPreference('autosuggest', IAPPrefs.getPreference('autosuggest') == 1 ? 0 : 1);
                     if (IAPPrefs.getPreference('autosuggest') == 1) {
@@ -977,8 +1018,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     }
                 });
 
-                IAPSnippets.cssOn = function(ison) {
-                    if (ison) {
+                IAPSnippets.cssOn = function(isOn) {
+                    if (isOn) {
                         $('#editorDlg-codeEditor_autocomplete').css('background-color', 'rgb(222, 239, 251)');
                         $('#editorDlg-codeEditor_autocomplete').prop('title', 'Autocomplete: Ctrl-Space\nAutodetect: On\n');
                     } else {
@@ -998,15 +1039,11 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                                     //console.log(addedNode);
 
                                     $(addedNode).find('.ui-dialog-title').each(function() {
-                                        //console.log('found ui-dialog-title', $(this).text());
-                                        let text = $(this).text().trim();
-                                        //Todo: Use apex.lang
-                                        if (text == 'Code Editor - PL/SQL Code' ||
-                                            //text == 'Code Editor - SQL Query' ||
-                                            text == 'Code Editor - PL/SQL Expression' ||
-                                            //text == 'Code Editor - SQL Expression' ||
-                                            text == 'Code Editor - PL/SQL Function Body') {
-                                            //console.log('Detected - Opened Pl/SQL Editor!');
+
+                                        let text = $(this).text();
+                                        //console.log(text);
+                                        if ( text.indexOf('PL/SQL') != -1
+                                           ) {
                                             $('#editorDlg-codeEditor_autocomplete').css('border-radius', '6px');
                                             if (IAPPrefs.getPreference('autosuggest') == undefined) {
                                                 IAPPrefs.setPreference('autosuggest', 1);
@@ -1473,26 +1510,24 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
     //IAPSelect2 - INSUM-APEX-PRO Select2
     (function(IAPSelect2) {
 
-        let allSelect2s = [];
         if (isRunningOnPageDesigner) {
+            IAPSelect2.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length > 0 ? 'White' : 'Dark');
+            if(IAPSelect2.colorMode == 'Dark') {
+              select2DarkModeCss();
+            }
             updatePropertyEditorWidths();
-        } else {
-            window.setInterval(function() {
-                $.each(allSelect2s, function() {
-                    $(this).css('width', (parseFloat($(this).prev().css('width')) + 70) + 'px');
-                })
-            }, 50);
+			      createMutationObserver();
+      			$('body').find('select').each(function() {
+      				makeSelect2(this);
+      			});
         }
 
-
-
-        createMutationObserver();
-
-        $('body').find('select').each(function() {
-            makeSelect2(this);
-        });
-
-
+        function select2DarkModeCss() {
+          var link = document.createElement('link');
+          link.href =  chrome.runtime.getURL('thirdParty/select2-adminlte.css');
+          link.rel = 'stylesheet';
+          document.getElementsByTagName("head")[0].appendChild(link);
+        }
 
         function createMutationObserver() {
             let target = $('body')[0];
@@ -1553,9 +1588,22 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
                 $(t).select2({
                     width: isRunningOnPageDesigner ? '100%' : (parseFloat($(t).css('width')) + 70) + 'px',
+                    theme: (IAPSelect2.colorMode == 'Dark' ? 'dark-adminlte' : undefined),
                     allowClear: nullOption ? true : false,
                     placeholder: nullOption ? nullOption : undefined
                 });
+
+                //Fix for the "x" button opening select2, taken from https://github.com/select2/select2/issues/5163
+                $(t).on('select2:unselecting', function(ev) {
+                  if (ev.params.args.originalEvent) {
+                      // When unselecting (in multiple mode)
+                      ev.params.args.originalEvent.stopPropagation();
+                  } else {
+                      // When clearing (in single mode)
+                      $(this).one('select2:opening', function(ev) { ev.preventDefault(); });
+                  }
+                  triggerChangeForApex(me, id);
+              });
 
 
 
@@ -1568,6 +1616,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     triggerChangeForApex(me, id);
                 });
 
+
+
                 $(t).next('.select2')
                     .find('.select2-selection,.select2-selection__rendered,.select2-selection__arrow')
                     .css({
@@ -1577,7 +1627,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                         'font-family': selectFontFamily,
                     });
 
-                allSelect2s.push($(t).next());
+
+
 
                 //Call the select2 when the select's "change" event occurs.
                 append(function(params) {
@@ -1640,33 +1691,40 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 function() {
                     window.updatePropertyEditorWidths = function() {
                         $('.select2').each(function() {
-                            $(this).css('width', '0px');
-                            let $parent = $(this).parents('.a-Property');
 
-                            let $label = $parent.find('.a-Property-labelContainer');
-                            let labelWidth = $label.css('display') == 'table-cell' ? $label.outerWidth() : 0;
+                          //LOV Dialog selects initialize with the wrong size so we set it to 100%
+                          if($(this).parents('#lovDlg')) {
+                            $(this).css('width', '100%');
+                            return;
+                          }
 
-                            let $button = $parent.find('.a-Property-buttonContainer button');
-                            let buttonWidth = $button.outerWidth() + 30;
+                          $(this).css('width', '0px');
+                          let $parent = $(this).parents('.a-Property');
 
-                            let parentWidth = $parent.outerWidth();
+                          let $label = $parent.find('.a-Property-labelContainer');
+                          let labelWidth = $label.css('display') == 'table-cell' ? $label.outerWidth() : 0;
 
-                            let remainingWidth = (parentWidth - labelWidth - buttonWidth) + 'px';
+                          let $button = $parent.find('.a-Property-buttonContainer button');
+                          let buttonWidth = ($button.outerWidth() || -10) + 30;
 
-                            let $selectContainer = $(this).parents('.a-Property-fieldContainer');
+                          let parentWidth = $parent.outerWidth();
 
-                            if ($label.css('display') == 'table-cell') {
-                                $selectContainer.css('max-width', '100%');
-                                $selectContainer.css('width', '100%');
-                                $(this).css('width', remainingWidth);
-                            } else {
+                          let remainingWidth = (parentWidth - labelWidth - buttonWidth) + 'px';
 
-                                $selectContainer.css('max-width', '');
-                                $selectContainer.css('width', remainingWidth);
+                          let $selectContainer = $(this).parents('.a-Property-fieldContainer');
 
-                                $(this).css('width', remainingWidth);
+                          if ($label.css('display') == 'table-cell') {
+                              $selectContainer.css('max-width', '100%');
+                              $selectContainer.css('width', '100%');
+                              $(this).css('width', remainingWidth);
+                          } else {
 
-                            }
+                              $selectContainer.css('max-width', '');
+                              $selectContainer.css('width', remainingWidth);
+
+                              $(this).css('width', remainingWidth);
+
+                          }
 
                         });
                     }
@@ -1677,7 +1735,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
                     window.setInterval(function() {
                         updatePropertyEditorWidths();
-                    }, 50);
+                    }, 100);
 
                 });
 
