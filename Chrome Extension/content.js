@@ -181,9 +181,10 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     SAP.buttonColorWhenActive = (SAP.colorMode == 'Dark' ? 'silver' : '#DEEFFB');
                     SAP.backgroundColorForHighlighted = (SAP.colorMode == 'Dark' ? '#656565' : '#fcf8e3');
                     SAP.nuetralBackgroundColor = (SAP.colorMode == 'Dark' ? '#47484a' : '#fcf8e3');
-                    SAP.borderColor = (SAP.colorMode == 'Dark' ? '#656565' : 'fcf8e3');
+                    //SAP.borderColor = (SAP.colorMode == 'Dark' ? '#656565' : 'lightorange');
                     SAP.boxShadow = 'unset';
-                    SAP.nuetralBoxShadow = (SAP.colorMode == 'Dark' ? 'unset' : 'orange');
+                    SAP.nuetralBoxShadow = (SAP.colorMode == 'Dark' ? 'unset' : 'unset');
+                    addHighlitingStyleSheet();
 
                     var filterCookie = IAPPrefs.getPreference('firstFilter');
                     if (!filterCookie) {
@@ -581,7 +582,24 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     updatePropertyNodes();
                 }
 
+                function addHighlitingStyleSheet() {
+                  $('head').append(
+                    `
+                     <style type="text/css">
+                       .iap-highlighted-div {
+                         background-color: ` + SAP.backgroundColorForHighlighted + ` !important;
+                       }
 
+                       .iap-highlighted-field {
+                         background-color: ` + SAP.nuetralBackgroundColor + ` !important;
+                         /*border-bottom: 1px solid ` + SAP.borderColor + ` !important;*/
+                         box-shadow: unset !important;
+                       }
+                     </style>
+                    `
+                  );
+
+                }
 
                 /**
                  * Assumption SAP.currentNodes is populated with the nodes we want to check
@@ -706,39 +724,33 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 function addOrRemoveHighlighting(toHighlight, toDeHighlight) {
                     //console.log('allNonDefaultNodes', allNonDefaultNodes)
                     $.each(toHighlight, function() {
-                        addHighlightCss(this);
+                        addHighlightClasses(this);
                     });
 
                     $.each(toDeHighlight, function() {
-                        removeHighlightCss(this)
+                        removeHighlightClasses(this)
                     });
 
 
                 }
 
-                function addHighlightCss(el) {
+                function addHighlightClasses(el) {
+                    $(el).addClass('iap-highlighted-field');
+
+
                     let $outsideDiv = $(el).parent().parent();
-                    $(el).css('background-color', SAP.nuetralBackgroundColor);
-                    $outsideDiv.css('background-color', SAP.backgroundColorForHighlighted); //This color is taken from https://v4-alpha.getbootstrap.com/components/alerts
-                    //$outsideDiv.css('box-shadow','inset 1px 1px 1px 1px')'
+                    $outsideDiv.addClass('iap-highlighted-div');
 
-                    //  4px 0 0 0 #FFF inset, -4px 0 0 0 #FFF inset, 0 -1px 0 0 #E0E0E0 inset
 
-                    //$outsideDiv.css('color', '#faf2cc');
-
-                    //$(el).parent().parent().css('border', '1px solid #faf2cc'); //This color is also taken from there
-                    $(el).css('border', '1px solid ' + SAP.borderColor); //Color is yellow
-                    $(el).css('box-shadow', 'unset');
 
                 }
 
-                function removeHighlightCss(el) {
-                  let $outsideDiv = $(el).parent().parent();
+                function removeHighlightClasses(el) {
+                  $(el).removeClass('iap-highlighted-field');
 
-                    $(el).parent().parent().css('background-color', 'rgba(0,0,0,0)'); //Back to parent's color
-                    //$(el).parent().parent().css('box-shadow', ''); //No more color!
-                    $(el).css('border', SAP.nuetralBackgroundColor); //Color is no longer yellow
-                    $(el).css('box-shadow', SAP.nuetralBoxShadow);
+                  let $outsideDiv = $(el).parent().parent();
+                  $outsideDiv.removeClass('iap-highlighted-div'); //Back to parent's color
+
                 }
 
                 /**
