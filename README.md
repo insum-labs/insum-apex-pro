@@ -1,5 +1,5 @@
-# [Insum Apex Pro](https://chrome.google.com/webstore/detail/insum-apex-pro/mjioniifffnmbdkkfmfjeclkpghlpmai)
-> Designed by Apex developers, for Apex developers.
+# [Insum APEX Pro](https://chrome.google.com/webstore/detail/insum-apex-pro/mjioniifffnmbdkkfmfjeclkpghlpmai)
+> Designed by APEX developers, for APEX developers.
 
 ### Features
 Property Highlighter
@@ -10,10 +10,10 @@ Property Highlighter
 Persisent Filter and Persistent Attribute Focus
 * After you apply a filter to a component, that filter will persist as you switch to other components 
 * Switching between components keeps the focus on whatever attribute you were last viewing
-* This feature exists in Apex 5.2, but we've added it to 5.1 and earlier.
+* This feature exists in APEX 18.1, but we've added it to 5.1 and earlier.
 
 Autocomplete PL/SQL editor
-* All Apex/Oracle functions that are documented show automatically as you type.
+* All APEX/Oracle functions that are documented show automatically as you type.
 * You can expand the snippet to get all of their parameters
 * There is a URL "more" button at the bottom of the snippet which you can click to go straight to the procedure's documentation
 
