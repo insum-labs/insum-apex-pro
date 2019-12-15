@@ -5,9 +5,11 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
     //We are on an Apex URL, but this isn't an apex developer page.
     //e.g. http://*/*/wwv_flow.accept is only sometimes a developer page. It can be arrived from a user.
     //So we must exit
-} else {
+}
+else {
 
     consoleThankYouMessage();
+
     /**
      * @function append
      * @param {} func
@@ -30,7 +32,6 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
     }
 
     function addPageDesignerCode() {
-
         let appendToPage = function(userPreferences) {
 
             /**
@@ -152,6 +153,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
             //SAP stands for "show altered properties"
             window.SAP = {};
             (function() {
+
                 SAP.allData = null;
                 SAP.version = parseFloat(gApexVersion[0] + gApexVersion[1] + gApexVersion[2]);
                 SAP.language = gBuilderLang;
@@ -1009,6 +1011,14 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     IAPSnippets.destroyDecorationAndSnippet();
                 });
 
+                IAPSnippets.destroyDecorationAndSnippet = function() {
+                    $(IAPSnippets.decoration).remove();
+                    IAPSnippets.snippet = null;
+                }
+
+
+
+
                 $('body').on('click', 'div[aria-describedby="editorDlg"]:has(.ui-dialog-title:contains("PL/SQL")) #editorDlg-codeEditor_autocomplete', function(e) {
 
                     IAPSnippets.destroyDecorationAndSnippet();
@@ -1019,6 +1029,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                         IAPSnippets.cssOn(false);
                     }
                 });
+
+
 
                 $('body').on('keyup', function(e) {
                     if (e.keyCode == 27) { //escape key
@@ -1041,6 +1053,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 }
 
                 function createMutationObserver() {
+
                     let target = $('body')[0];
                     let observer = new MutationObserver(function(mutations) {
                         for (var i = 0; i < mutations.length; i++) {
@@ -1387,9 +1400,9 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     $('body').append(container);
                 }
 
-                IAPSnippets.destroyDecorationAndSnippet = function() {
-                    $(IAPSnippets.decoration).remove();
-                    IAPSnippets.snippet = null;
+                function regexIndexOf(str, regex, startpos) {
+                    var indexOf = str.substring(startpos || 0).search(regex);
+                    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
                 }
 
                 function expandSnippet() {
@@ -1414,7 +1427,10 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                                 ch: lineTextLength
                             });
 
-                            let startOfChopping = lineText.regexIndexOf(/[^a-zA-Z\.1-9]*$/);
+
+
+
+                            let startOfChopping = regexIndexOf(lineText, /[^a-zA-Z\.1-9]*$/);
 
                             doc.setSelection({
                                 line: currLine,
@@ -1487,12 +1503,6 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
                     return compare1 == compare2;
                 }
-
-                String.prototype.regexIndexOf = function(regex, startpos) {
-                    var indexOf = this.substring(startpos || 0).search(regex);
-                    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
-                }
-
             }(window.IAPSnippets = window.IAPSnippets || {}));
 
 
