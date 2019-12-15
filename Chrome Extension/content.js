@@ -5,11 +5,9 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
     //We are on an Apex URL, but this isn't an apex developer page.
     //e.g. http://*/*/wwv_flow.accept is only sometimes a developer page. It can be arrived from a user.
     //So we must exit
-}
-else {
+} else {
 
     consoleThankYouMessage();
-
     /**
      * @function append
      * @param {} func
@@ -32,6 +30,7 @@ else {
     }
 
     function addPageDesignerCode() {
+
         let appendToPage = function(userPreferences) {
 
             /**
@@ -153,7 +152,6 @@ else {
             //SAP stands for "show altered properties"
             window.SAP = {};
             (function() {
-
                 SAP.allData = null;
                 SAP.version = parseFloat(gApexVersion[0] + gApexVersion[1] + gApexVersion[2]);
                 SAP.language = gBuilderLang;
@@ -179,7 +177,14 @@ else {
                 // Also, apply the appropriate css as a result
                 $(document).ready(function() {
 
-                    SAP.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length > 0 ? 'White' : 'Dark');
+                    if($('.a-Header-accountDialog-switcher').length == 0) {
+                        SAP.colorMode = 'White';
+                    } else {
+                        SAP.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length == 0 ? 'Dark' : 'White');
+                    }
+
+                    //console.log('Ready - Trace - SAP.colorMode', SAP.colorMode);
+                    //console.log($('.a-Header-accountDialog-switcher.is-off'));
                     SAP.buttonColorWhenActive = (SAP.colorMode == 'Dark' ? 'silver' : '#DEEFFB');
                     SAP.backgroundColorForHighlighted = (SAP.colorMode == 'Dark' ? '#656565' : '#fcf8e3');
                     SAP.nuetralBackgroundColor = (SAP.colorMode == 'Dark' ? '#47484a' : '#fcf8e3');
@@ -1011,14 +1016,6 @@ else {
                     IAPSnippets.destroyDecorationAndSnippet();
                 });
 
-                IAPSnippets.destroyDecorationAndSnippet = function() {
-                    $(IAPSnippets.decoration).remove();
-                    IAPSnippets.snippet = null;
-                }
-
-
-
-
                 $('body').on('click', 'div[aria-describedby="editorDlg"]:has(.ui-dialog-title:contains("PL/SQL")) #editorDlg-codeEditor_autocomplete', function(e) {
 
                     IAPSnippets.destroyDecorationAndSnippet();
@@ -1029,8 +1026,6 @@ else {
                         IAPSnippets.cssOn(false);
                     }
                 });
-
-
 
                 $('body').on('keyup', function(e) {
                     if (e.keyCode == 27) { //escape key
@@ -1053,7 +1048,6 @@ else {
                 }
 
                 function createMutationObserver() {
-
                     let target = $('body')[0];
                     let observer = new MutationObserver(function(mutations) {
                         for (var i = 0; i < mutations.length; i++) {
@@ -1400,6 +1394,11 @@ else {
                     $('body').append(container);
                 }
 
+                IAPSnippets.destroyDecorationAndSnippet = function() {
+                    $(IAPSnippets.decoration).remove();
+                    IAPSnippets.snippet = null;
+                }
+
                 function regexIndexOf(str, regex, startpos) {
                     var indexOf = str.substring(startpos || 0).search(regex);
                     return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
@@ -1426,9 +1425,6 @@ else {
                                 line: currLine,
                                 ch: lineTextLength
                             });
-
-
-
 
                             let startOfChopping = regexIndexOf(lineText, /[^a-zA-Z\.1-9]*$/);
 
@@ -1503,6 +1499,7 @@ else {
 
                     return compare1 == compare2;
                 }
+
             }(window.IAPSnippets = window.IAPSnippets || {}));
 
 
@@ -1533,7 +1530,12 @@ else {
     (function(IAPSelect2) {
 
         if (isRunningOnPageDesigner) {
-            IAPSelect2.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length > 0 ? 'White' : 'Dark');
+            if($('.a-Header-accountDialog-switcher').length == 0) {
+                IAPSelect2.colorMode = 'White';
+            } else {
+                IAPSelect2.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length == 0 ? 'Dark' : 'White');
+            }
+
             if(IAPSelect2.colorMode == 'Dark') {
               select2DarkModeCss();
             }
