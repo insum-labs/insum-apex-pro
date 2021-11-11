@@ -168,7 +168,6 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 SAP.backgroundColorForHighlighted = null;
                 SAP.nuetralBackgroundColor = null;
                 createFilterButton();
-                createHighlightButton();
                 createMutationObserver();
                 listenForChangesToCompAndCompType();
                 initOrResetAllData();
@@ -176,12 +175,25 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 // Get initial state of SAP.hideDefaultItems and SAP.highlightNonDefaults
                 // Also, apply the appropriate css as a result
                 $(document).ready(function() {
+                    
+                    $('body').on('click','.js-ui-mode-btn',setColorMode);
+                    setColorMode();
+                });
 
-                    if($('.a-Header-accountDialog-switcher').length == 0) {
+                function setColorMode() {
+                    if($('body.apex-theme-standard,body.apex-theme-standard-auto').length > 0) {
                         SAP.colorMode = 'White';
+                    } else if($('body.apex-theme-dark,body.apex-theme-dark-auto').length) {
+                        SAP.colorMode = 'Dark';
                     } else {
-                        SAP.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length == 0 ? 'Dark' : 'White');
+                        //Compatibility with older versions of APEX (as of 20.2)
+                        if($('.a-Header-accountDialog-switcher').length == 0) {
+                            SAP.colorMode = 'White';
+                        } else {
+                            SAP.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length == 0 ? 'Dark' : 'White');
+                        }
                     }
+
 
                     //console.log('Ready - Trace - SAP.colorMode', SAP.colorMode);
                     //console.log($('.a-Header-accountDialog-switcher.is-off'));
@@ -207,18 +219,10 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     }
                     var highlightCookie = IAPPrefs.getPreference('highlightToggle');
                     //console.log('highlight cookie in document ready', highlightCookie);
-                    if (highlightCookie == undefined) {
-                        SAP.highlightNonDefaults = true;
-                        IAPPrefs.setPreference('highlightToggle', 1); // Checks to see if highlighting has been toggled
-                        $('#pe_toggleNonDefaults').css('background-color', SAP.buttonColorWhenActive);
-                    } else if (highlightCookie == 1) {
-                        SAP.highlightNonDefaults = true;
-                        $('#pe_toggleNonDefaults').css('background-color', SAP.buttonColorWhenActive);
-                    } else {
-                        SAP.highlightNonDefaults = false;
-                        $('#pe_toggleNonDefaults').css('background-color', 'rgba(0,0,0,0)');
-                    }
-                });
+                    IAPPrefs.setPreference('highlightToggle', 1); // Checks to see if highlighting has been toggled
+                    SAP.highlightNonDefaults = true;
+
+                }
 
                 //Anytime we got to a different page from the #go_to_page element, we must restart
                 $('body').on('change', '#go_to_page',
@@ -248,7 +252,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                  * @function createFilterButton
                  */
                 function createFilterButton() {
-                    $('#peToolbar .a-Toolbar-items.a-Toolbar-items--left').append('<button class="a-Button a-Button--noLabel a-Button--withIcon" ' +
+                    $('#peToolbar .a-Toolbar-items.a-Toolbar-items--left,' + //5.1
+                      '#peMainToolbar .a-Toolbar-items.a-Toolbar-items--left').append('<button class="a-Button a-Button--noLabel a-Button--withIcon" ' +
                         'onclick="void(0);" aria-label="Show Non-Defaults Only" type="button" ' +
                         'id="pe_showNonDefaults" title="Show Non-Defaults Only">' +
                         '<span style="color:black" class="a-Icon icon-irr-filter" aria-hidden="true">' +
@@ -267,35 +272,6 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                             $('#pe_showNonDefaults').css('background-color', 'rgba(0,0,0,0)');
                             IAPPrefs.setPreference('firstFilter', 0);
                             hideOrShowItems($('#peComponentProperties [data-property-id]').toArray(), [])
-                        }
-                    });
-                }
-
-                /**
-                 * @function createHighlightButton
-                 */
-                function createHighlightButton() {
-                    $('#peToolbar .a-Toolbar-items.a-Toolbar-items--left').append('<button class="a-Button a-Button--noLabel a-Button--withIcon" ' +
-                        'onclick="void(0);" aria-label="Toggle Non-Defaults" type="button" ' +
-                        'id="pe_toggleNonDefaults" title="Toggle Non-Defaults" style="left:1px;">' +
-                        '<span style="color:black;" class="a-Icon icon-edit" aria-hidden="true">' +
-                        '</span></button>');
-                    $('#pe_toggleNonDefaults').bind('click', function() {
-                        SAP.highlightNonDefaults = !SAP.highlightNonDefaults;
-                        if (SAP.highlightNonDefaults) {
-                            $('#pe_toggleNonDefaults').css('background-color', SAP.buttonColorWhenActive);
-
-                            SAP.currentNodes = $('#peComponentProperties [data-property-id]').toArray();
-
-
-                            updatePropertyNodes();
-                            // alert('now highlighting non-default values');
-                            IAPPrefs.setPreference('highlightToggle', 1);
-                        } else {
-                            $('#pe_toggleNonDefaults').css('background-color', 'rgba(0,0,0,0)');
-                            //Remove all highlighting
-                            addOrRemoveHighlighting([], $('#peComponentProperties [data-property-id]').toArray());
-                            IAPPrefs.setPreference('highlightToggle', 0);
                         }
                     });
                 }
@@ -490,7 +466,6 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     }, 10);
                 }
 
-
                 /**
                  * @function createMutationObserver
                  */
@@ -515,6 +490,11 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                             if (mutations[i].addedNodes.length) {
 
                                 if (rslt && rslt.length) {
+                                    //A little hack requested by Trent Schafer (way before he left Insum, lol)
+                                    if($('#peMain_externalEdit').length == 1) {
+                                        $('#peMain_externalEdit').click(); 
+                                    }
+
                                     for (let j = 0; j < rslt.length; j++) {
                                         addedNodes.push((rslt[j]));
                                         let isBoundToChangeEvent;
@@ -838,8 +818,9 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 if (IAPPrefs.getPreference("LastSelectedPropCookie") == 1) {
                     // console.log('inside focusLastSelectedProperty');
                     // get curretly selected property id
-                    var currentSelected = $(document.activeElement).data('property-id');
-                    var currentPosition;
+                    //debugger
+                    let currentSelected = $(document.activeElement).data('property-id');
+                    let currentPosition;
                     if(currentSelected) {
                        currentPosition = $(document.activeElement)[0].getBoundingClientRect().top;
                     } else {
@@ -847,7 +828,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     }
 
                     // update currentSelected
-                    $(document).on('click.updateCurrentSelection', '#pe .u-ScrollingViewport', function() {
+                    $(document).on('click.updateCurrentSelection', '#pe .u-ScrollingViewport,' + 
+                                                                   '#peMain .u-ScrollingViewport', function() {
                         let currentSelectedCheck = $(document.activeElement).parents('.a-Property-fieldContainer').find('[data-property-id]').data('property-id');
 
                         if (currentSelectedCheck) {
@@ -858,6 +840,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     });
                     // register focus on selectionChanged event
                     $(document).on('selectionChanged.focusOnPropAfterSelection', function(e, name, components) {
+                        //debugger;
                         if (currentSelected &&
                             $(`[data-property-id=${currentSelected}]`) &&
                             $(`[data-property-id=${currentSelected}]`).parent() &&
@@ -866,13 +849,11 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                             //Scroll the property item into view
                             $(`[data-property-id=${currentSelected}]`).parents('.a-Property')[0].scrollIntoView(true);
                             //Oftentimes the scrollbar gets scrolled as well when we do scrollIntoView(), so we make sure it's also in view
-                            $('#peToolbar')[0].scrollIntoView();
+                            $('#peToolbar,#peMainToolbar')[0].scrollIntoView();
                             //Now we want to make its viewing position the same as the earlier property
-                            console.log("  $('#pe .u-ScrollingViewport')[0].scrollTop, currentPosition, $(`[data-property-id=${currentSelected}]`)[0].getBoundingClientRect().top;");
-                            console.log($('#pe .u-ScrollingViewport')[0].scrollTop, currentPosition,  $(`[data-property-id=${currentSelected}]`)[0].getBoundingClientRect().top);
-
                             $(`[data-property-id=${currentSelected}]`).focus();
-                            $('#pe .u-ScrollingViewport')[0].scrollTop -= currentPosition - $(`[data-property-id=${currentSelected}]`)[0].getBoundingClientRect().top;
+                            $('#pe .u-ScrollingViewport,' +
+                              '#peMain .u-ScrollingViewport')[0].scrollTop -= currentPosition - $(`[data-property-id=${currentSelected}]`)[0].getBoundingClientRect().top;
                             $(`[data-property-id=${currentSelected}]`).parents('.a-Property')[0].scrollIntoViewIfNeeded();
 
                         }
@@ -883,7 +864,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                         }
                     })
                 }
-                if (IAPPrefs.getPreference("LastSelectedPropCookie") === null) {
+                if (IAPPrefs.getPreference("LastSelectedPropCookie") == null) {
                     IAPPrefs.setPreference("LastSelectedPropCookie", 1);
                     focusLastSelectedProperty();
                 }
@@ -912,7 +893,9 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
             function persistentFocusProperties() {
 
                 $(document).on('selectionChanged', function(e, name, component) {
-                    var $filterInput = $("#pe > div.a-PropertyEditor-filter > input");
+                    let filterStr = "#pe > div.a-PropertyEditor-filter > input," + 
+                                    "#peComponentProperties .a-PropertyEditor-filter input";
+                    var $filterInput = $(filterStr);
                     $filterInput.val(window.textToFilter || "");
                     $filterInput.trigger('keyup', {
                         keyCode: 13
@@ -920,8 +903,8 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
                     // set current value in filter
                     // TODO remove dependency on currentFilter
-                    var currentFilter = $("#pe > div.a-PropertyEditor-filter > input").val();
-                    $("#pe > div.a-PropertyEditor-filter > input").on('keyup', function() {
+                    var currentFilter = $(filterStr).val();
+                    $(filterStr).on('keyup', function() {
                         window.textToFilter = $(this).val();
                     });
                 });
@@ -1530,20 +1513,38 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
     (function(IAPSelect2) {
 
         if (isRunningOnPageDesigner) {
-            if($('.a-Header-accountDialog-switcher').length == 0) {
+            $('body').on('click','.js-ui-mode-btn',setColorMode);
+            setColorMode();
+
+			createMutationObserver();
+      		$('body').find('select').each(function() {
+      			makeSelect2(this);
+      		});
+        }
+
+        function setColorMode() {
+            if($('body.apex-theme-standard,body.apex-theme-standard-auto').length > 0) {
                 IAPSelect2.colorMode = 'White';
+            } else if($('body.apex-theme-dark,body.apex-theme-dark-auto').length) {
+                IAPSelect2.colorMode = 'Dark';
             } else {
-                IAPSelect2.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length == 0 ? 'Dark' : 'White');
+                //Compatibility with older versions of APEX (as of 20.2)
+                if($('.a-Header-accountDialog-switcher').length == 0) {
+                    IAPSelect2.colorMode = 'White';
+                } else {
+                    IAPSelect2.colorMode = ($('.a-Header-accountDialog-switcher.is-off').length == 0 ? 'Dark' : 'White');
+                }
             }
 
             if(IAPSelect2.colorMode == 'Dark') {
               select2DarkModeCss();
+            } else {
+              $('link[href$="thirdParty/select2-adminlte.css"]').remove();
             }
+
             updatePropertyEditorWidths();
-			      createMutationObserver();
-      			$('body').find('select').each(function() {
-      				makeSelect2(this);
-      			});
+
+  
         }
 
         function select2DarkModeCss() {
@@ -1606,9 +1607,11 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
             } else {
                 let id = $(t).prop('id');
                 let nullOption = $(t).find('[value=""]').html();
-                let selectHeight = $(t).css('height') || [0].getBoundingClientRect().height + 'px';
+                let selectHeight = $(t).css('min-height') || [0].getBoundingClientRect().height + 'px';
                 let selectFontSize = $(t).css('font-size') || '12px';
                 let selectFontFamily = $(t).css('font-family') || 'Helvetica Neue,Helvetica,Arial,sans-serif';
+                
+                console.log('selectHeight',selectHeight);
 
                 $(t).select2({
                     width: isRunningOnPageDesigner ? '100%' : (parseFloat($(t).css('width')) + 70) + 'px',
