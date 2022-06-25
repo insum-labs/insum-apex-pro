@@ -15,8 +15,10 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
      */
 
     function append(func, params) {
+        //console.log('trace inside append for content.js')
         var script = $('<script>(' + func.toString() + ')(' + (typeof params == "object" ? JSON.stringify(params) : params) + ')</script>');
-        $('body').append(script);
+        //$('body').append(script);
+        $(document.documentElement).append(script);
     }
 
 
@@ -471,6 +473,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                  */
                 function createMutationObserver() {
                     let target = $('#peComponentProperties')[0];
+                    let sharedComponentClicked = false;
                     let observer = new MutationObserver(function(mutations) {
                         //console.log(mutations);
                         SAP.currentNodes = [];
@@ -485,14 +488,22 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                             } else {
                                 rslt = $(mutations[i].target).find('[data-property-id]');
                             }
-
+                            
+                            //console.log('mutations',mutations);
+                            //console.log('rslt',rslt);
 
                             if (mutations[i].addedNodes.length) {
 
                                 if (rslt && rslt.length) {
                                     //A little hack requested by Trent Schafer (way before he left Insum, lol)
-                                    if($('#peMain_externalEdit').length == 1) {
+                                    if($('#peMain_externalEdit').length == 1 && !sharedComponentClicked) {
                                         $('#peMain_externalEdit').click(); 
+
+                                        //prevent the double-click bug
+                                        sharedComponentClicked = true;
+                                        window.setTimeout(function() {
+                                            sharedComponentClicked = false;
+                                        },500);
                                     }
 
                                     for (let j = 0; j < rslt.length; j++) {
@@ -518,7 +529,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                             }
                         }
 
-                        //console.log(addedNodes);
+                        //console.log('addedNodes',addedNodes);
                         SAP.currentNodes = addedNodes;
                         //console.log('SAP.currentNodes', SAP.currentNodes);
                         if (SAP.allData && SAP.currentNodes.length) {
@@ -644,14 +655,31 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     let allNonDefaultNodes = [];
                     let allDefaultNodes = [];
                     $.each(SAP.currentNodes, function() {
+                        //var isDebugField = $(this).prop('type') == 'checkbox';
                         let val = "";
                         let id = $(this).data('property-id');
+                        if(id == 97) {
+                            //Ignore 97 "Sequence" (its always non-default and so uninteresting)
+                            return;
+                        }
                         switch ($(this).prop('tagName').toLowerCase()) {
                             case 'input':
                             case 'select':
                             case 'textarea':
                             case 'button':
-                                val = $(this).val();
+                                if($(this).prop('type') == 'checkbox') {
+                                    if($(this).prop('checked') == true) {
+                                        val = $(this).val()
+                                    } else {
+                                        if($(this).val() == 'Y') {
+                                            val = 'N'
+                                        }else {
+                                            val = '';
+                                        }
+                                    }
+                                } else {
+                                    val = $(this).val();
+                                }
                                 break;
                             case 'div':
                                 //Check to see whether we are a radio or an array of checkboxes.
@@ -677,7 +705,16 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
                                 break;
                         }
-
+                        
+                        /*
+                        if(isDebugField) {
+                            console.log('trace debug field','val',val);
+                            console.log('$(this).prop(\'tagName\').toLowerCase()',$(this).prop('tagName').toLowerCase());
+                            console.log('SAP.currentProps[typeId + \'-\' + id].defaultValue.trim()',SAP.currentProps[typeId + '-' + id].defaultValue.trim());
+                            console.log('typeId',typeId);
+                            console.log('id',id);
+                            console.log('SAP.currentProps',SAP.currentProps);
+                        }*/
 
 
 
@@ -687,6 +724,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
 
                         if (SAP.currentProps[typeId + '-' + id].defaultValue.trim() != ("" + val).trim()) {
+                            //console.log('trace b4 adding to nondefault nodes', this);
                             allNonDefaultNodes.push(this);
                         } else {
                             allDefaultNodes.push(this);
@@ -1598,6 +1636,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
             //	it doesn't have an id
             //	it's a "multiple"
             //	it's inside of an IRR, IGG, (other plugins pending)
+            //console.log('Trace inside makeSelect2', me)
             if ($(t).hasClass("select2-hidden-accessible") ||
                 $(t).find('option').length < 7 ||
                 !$(t).prop('id') ||
@@ -1607,11 +1646,11 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
             } else {
                 let id = $(t).prop('id');
                 let nullOption = $(t).find('[value=""]').html();
-                let selectHeight = $(t).css('min-height') || [0].getBoundingClientRect().height + 'px';
+                let selectHeight = $(t).css('min-height') || t.getBoundingClientRect().height + 'px';
                 let selectFontSize = $(t).css('font-size') || '12px';
                 let selectFontFamily = $(t).css('font-family') || 'Helvetica Neue,Helvetica,Arial,sans-serif';
                 
-                console.log('selectHeight',selectHeight);
+                //console.log('selectHeight',selectHeight);
 
                 $(t).select2({
                     width: isRunningOnPageDesigner ? '100%' : (parseFloat($(t).css('width')) + 70) + 'px',

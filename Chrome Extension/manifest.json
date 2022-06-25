@@ -21,6 +21,6 @@
    "name": "Insum APEX Pro",
    "permissions": [ "storage" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.8.31",
+   "version": "2.0.0",
    "web_accessible_resources": [ "thirdParty/select2-adminlte.css" ]
 }
