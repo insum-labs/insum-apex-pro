@@ -177,7 +177,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 // Get initial state of SAP.hideDefaultItems and SAP.highlightNonDefaults
                 // Also, apply the appropriate css as a result
                 $(document).ready(function() {
-                    
+
                     $('body').on('click','.js-ui-mode-btn',setColorMode);
                     setColorMode();
                 });
@@ -375,9 +375,22 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     let all = pe.getAll();
                     let currentPageId = pe.getCurrentPageId();
                     let page = pe.COMP_TYPE.PAGE;
-                    let userInterface = pe.PROP.USER_INTERFACE;
-                    let gCurrentUserInterface =
-                        all.sharedComponents.userInterfaces[all.components[page][currentPageId].getProperty(userInterface).getValue()];
+                    let gCurrentUserInterface;
+                    try {
+                        // The following properties are accessible in the Page Designer of APEX versions < 22.2
+                        let userInterface = pe.PROP.USER_INTERFACE;
+                        gCurrentUserInterface =
+                            all.sharedComponents.userInterfaces[all.components[page][currentPageId].getProperty(userInterface).getValue()];
+                        //console.log("legacy userInterfaces property was used");
+                    } catch (e) {
+                        if (e instanceof TypeError) {
+                            // For APEX versions >= 22.2 the following property should be used instead
+                            gCurrentUserInterface = all.sharedComponents.userInterface;
+                            //console.log("new APEX 22.2 userInterface property was used");
+                        } else {
+                            throw e;
+                        }
+                    }
 
 
 
@@ -488,7 +501,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                             } else {
                                 rslt = $(mutations[i].target).find('[data-property-id]');
                             }
-                            
+
                             //console.log('mutations',mutations);
                             //console.log('rslt',rslt);
 
@@ -497,7 +510,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                                 if (rslt && rslt.length) {
                                     //A little hack requested by Trent Schafer (way before he left Insum, lol)
                                     if($('#peMain_externalEdit').length == 1 && !sharedComponentClicked) {
-                                        $('#peMain_externalEdit').click(); 
+                                        $('#peMain_externalEdit').click();
 
                                         //prevent the double-click bug
                                         sharedComponentClicked = true;
@@ -705,7 +718,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
                                 break;
                         }
-                        
+
                         /*
                         if(isDebugField) {
                             console.log('trace debug field','val',val);
@@ -866,7 +879,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                     }
 
                     // update currentSelected
-                    $(document).on('click.updateCurrentSelection', '#pe .u-ScrollingViewport,' + 
+                    $(document).on('click.updateCurrentSelection', '#pe .u-ScrollingViewport,' +
                                                                    '#peMain .u-ScrollingViewport', function() {
                         let currentSelectedCheck = $(document.activeElement).parents('.a-Property-fieldContainer').find('[data-property-id]').data('property-id');
 
@@ -931,7 +944,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
             function persistentFocusProperties() {
 
                 $(document).on('selectionChanged', function(e, name, component) {
-                    let filterStr = "#pe > div.a-PropertyEditor-filter > input," + 
+                    let filterStr = "#pe > div.a-PropertyEditor-filter > input," +
                                     "#peComponentProperties .a-PropertyEditor-filter input";
                     var $filterInput = $(filterStr);
                     $filterInput.val(window.textToFilter || "");
@@ -1582,7 +1595,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
 
             updatePropertyEditorWidths();
 
-  
+
         }
 
         function select2DarkModeCss() {
@@ -1649,7 +1662,7 @@ if (window.location.href.indexOf('wwv_flow.accept') != -1 &&
                 let selectHeight = $(t).css('min-height') || t.getBoundingClientRect().height + 'px';
                 let selectFontSize = $(t).css('font-size') || '12px';
                 let selectFontFamily = $(t).css('font-family') || 'Helvetica Neue,Helvetica,Arial,sans-serif';
-                
+
                 //console.log('selectHeight',selectHeight);
 
                 $(t).select2({
